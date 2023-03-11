@@ -7,10 +7,10 @@ import retrofit2.http.Query
 
 interface Requests {
 
-    @GET("weather")
+    @GET("weather?")
     suspend fun getWeatherData(
         @Query("u") units: String,
-        @Query("location") cityName: String,
+        @Query("location") cityName: String
     ): Response<Weather>
 }
 
