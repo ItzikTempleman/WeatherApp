@@ -71,18 +71,15 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:1.4.0-beta02"
     implementation 'androidx.activity:activity-compose:1.6.1'
 
-    //hilt
+    //dagger hilt
     implementation "com.google.dagger:hilt-android:2.44"
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
     kapt "com.google.dagger:hilt-android-compiler:2.44"
 
-//    //room
-
+    //room
     implementation "androidx.room:room-ktx:2.5.0"
     implementation"androidx.room:room-runtime:2.5.0"
     kapt "androidx.room:room-compiler:2.5.0"
-
-
 
     //coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
@@ -96,12 +93,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 
-    //lifecycle
+    //view model
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
 
-    //testing
+    //tests
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

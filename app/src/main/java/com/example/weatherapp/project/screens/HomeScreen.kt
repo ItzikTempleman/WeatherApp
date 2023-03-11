@@ -1,4 +1,4 @@
-package com.example.weatherapp
+package com.example.weatherapp.project.screens
 
 import androidx.compose.runtime.Composable
 
