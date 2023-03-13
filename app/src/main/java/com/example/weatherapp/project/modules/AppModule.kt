@@ -1,11 +1,10 @@
 package com.example.weatherapp.project.modules
 
-import com.example.weatherapp.project.data.Requests
-import com.example.weatherapp.project.data.WeatherRequestInterceptor
+import com.example.weatherapp.project.requests.Requests
+import com.example.weatherapp.project.requests.WeatherRequestInterceptor
 import com.example.weatherapp.project.main.Constants.BASE_URL
 import com.example.weatherapp.project.main.Converters
-import com.example.weatherapp.project.repositories.AppRepository
-import com.example.weatherapp.project.repositories.AppRepositoryImp
+import com.example.weatherapp.project.repositories.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,14 +16,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+object AppModule {
     private val typeConverter = Converters()
-
-    @Provides
-    @Singleton
-    fun provideRepo(requests: Requests): AppRepository {
-        return AppRepositoryImp(requests)
-    }
 
 
     @Provides
@@ -39,4 +32,10 @@ class AppModule {
                     .build()
             )
             .build()
+
+
+    @Singleton
+    @Provides
+    fun provideRequestService(retrofit: Retrofit): Requests =
+        retrofit.create(Requests::class.java)
 }

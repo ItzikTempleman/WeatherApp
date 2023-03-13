@@ -4,7 +4,7 @@
     package="com.example.weatherapp">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:name=".project.main.MyApp"
+        android:name=".project.main.BaseApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
