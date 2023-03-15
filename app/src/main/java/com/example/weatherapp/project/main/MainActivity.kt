@@ -20,9 +20,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 val mainViewModel= viewModel<MainViewModel>()
-                val weather= mainViewModel.getWeatherResponse("c", "New York")
-                Log.d("TAG", "weather: $weather")
-                //HomeScreen()
+
+                HomeScreen(mainViewModel)
             }
         }
     }

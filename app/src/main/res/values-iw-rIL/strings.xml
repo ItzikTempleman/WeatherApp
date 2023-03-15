@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">WeatherApp</string>
+    <string name="app_name">מזג אוייר</string>
     <string name="search">חיפוש</string>
+    <string name="celsius">C</string>
+    <string name="dash">/</string>
+    <string name="fahrenheit">F</string>
 </resources>

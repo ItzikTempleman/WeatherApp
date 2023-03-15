@@ -15,8 +15,7 @@ import javax.inject.Inject
 class MainViewModel
 @Inject constructor(private val repository: Repository) : ViewModel() {
 
-    private val weatherResponseLiveData: MutableLiveData<NetworkResult<WeatherResponse>> =
-        MutableLiveData()
+    private val weatherResponseLiveData: MutableLiveData<NetworkResult<WeatherResponse>> = MutableLiveData()
     val response: LiveData<NetworkResult<WeatherResponse>> = weatherResponseLiveData
 
     fun getWeatherResponse(unit: String, city: String) = viewModelScope.launch {

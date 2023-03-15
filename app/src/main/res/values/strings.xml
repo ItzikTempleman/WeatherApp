@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">WeatherApp</string>
+    <string name="app_name">Weather</string>
     <string name="search">Search</string>
+    <string name="celsius">C</string>
+    <string name="dash">/</string>
+    <string name="fahrenheit">F</string>
 </resources>
