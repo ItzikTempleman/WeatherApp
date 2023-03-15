@@ -1,12 +1,11 @@
 package com.example.weatherapp.project.viewmodels
 
-import androidx.lifecycle.LiveData
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.project.models.WeatherResponse
 import com.example.weatherapp.project.repositories.Repository
-import com.example.weatherapp.project.requests.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,20 +14,18 @@ import javax.inject.Inject
 class MainViewModel
 @Inject constructor(private val repository: Repository) : ViewModel() {
 
-    private val weatherResponseLiveData: MutableLiveData<NetworkResult<WeatherResponse>> =
-        MutableLiveData()
-    //val response: LiveData<NetworkResult<WeatherResponse>> = weatherResponseLiveData
-
-    fun getWeatherResponse(
-        unit: String,
-        city: String
-    ): MutableLiveData<NetworkResult<WeatherResponse>> {
-
+    fun getWeatherResponse(unit: String, city: String): MutableLiveData<WeatherResponse> {
+        val weatherResponseLiveData: MutableLiveData<WeatherResponse> = MutableLiveData()
         viewModelScope.launch {
-            repository.getWeatherData(unit, city).collect {
-                weatherResponseLiveData.value = it
-
-            }
+            val response = repository.getWeather(unit, city)
+            if (response.isSuccessful) {
+                val responseBody = response.body()
+                if (responseBody != null) {
+                    weatherResponseLiveData.value = responseBody
+                } else Log.d("TAG", "first failure message: " + response.message())
+                return@launch
+            } else Log.d("TAG", "second failure message: " + response.message())
+            return@launch
         }
         return weatherResponseLiveData
     }

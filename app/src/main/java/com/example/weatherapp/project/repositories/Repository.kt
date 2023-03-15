@@ -11,14 +11,19 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
+//@ActivityRetainedScoped
+//class Repository @Inject constructor(private val requests: Requests) : BaseApiResponse() {
+//    suspend fun getWeatherData(unit: String, city: String): Flow<NetworkResult<WeatherResponse>> {
+//        return flow {
+//            emit(safeApiCall {
+//                requests.getWeatherData(unit, city)
+//                }
+//            )
+//        }.flowOn(Dispatchers.IO)
+//    }
+//    }
+
 @ActivityRetainedScoped
-class Repository @Inject constructor(private val requests: Requests) : BaseApiResponse() {
-    suspend fun getWeatherData(unit: String, city: String): Flow<NetworkResult<WeatherResponse>> {
-        return flow {
-            emit(safeApiCall {
-                requests.getWeatherData(unit, city)
-                }
-            )
-        }.flowOn(Dispatchers.IO)
-    }
+class Repository @Inject constructor(private val request: Requests){
+    suspend fun getWeather(unit:String, cityName:String)=request.getWeatherData(unit, cityName)
 }
