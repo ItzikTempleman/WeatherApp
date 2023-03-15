@@ -20,7 +20,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 val mainViewModel= viewModel<MainViewModel>()
-
                 HomeScreen(mainViewModel)
             }
         }

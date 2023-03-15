@@ -15,12 +15,21 @@ import javax.inject.Inject
 class MainViewModel
 @Inject constructor(private val repository: Repository) : ViewModel() {
 
-    private val weatherResponseLiveData: MutableLiveData<NetworkResult<WeatherResponse>> = MutableLiveData()
-    val response: LiveData<NetworkResult<WeatherResponse>> = weatherResponseLiveData
+    private val weatherResponseLiveData: MutableLiveData<NetworkResult<WeatherResponse>> =
+        MutableLiveData()
+    //val response: LiveData<NetworkResult<WeatherResponse>> = weatherResponseLiveData
 
-    fun getWeatherResponse(unit: String, city: String) = viewModelScope.launch {
-        repository.getWeatherData(unit, city).collect {
-            weatherResponseLiveData.value = it
+    fun getWeatherResponse(
+        unit: String,
+        city: String
+    ): MutableLiveData<NetworkResult<WeatherResponse>> {
+
+        viewModelScope.launch {
+            repository.getWeatherData(unit, city).collect {
+                weatherResponseLiveData.value = it
+
+            }
         }
+        return weatherResponseLiveData
     }
 }

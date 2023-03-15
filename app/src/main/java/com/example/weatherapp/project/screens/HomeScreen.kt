@@ -10,7 +10,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -19,13 +21,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.MutableLiveData
 import com.example.weatherapp.R
+import com.example.weatherapp.project.main.BaseApplication
 import com.example.weatherapp.project.viewmodels.MainViewModel
 
 
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
-
+val weatherResponse=mainViewModel.getWeatherResponse("c", "New York").observeAsState()
+val weather=weatherResponse
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -169,6 +174,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
     }
 }
+
 
 fun changeValue(isMetric: Boolean) {
     if (!isMetric) convertFromMetricToImperial()
