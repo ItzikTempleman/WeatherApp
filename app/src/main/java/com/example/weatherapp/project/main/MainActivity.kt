@@ -1,10 +1,8 @@
 package com.example.weatherapp.project.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.project.screens.HomeScreen
 import com.example.weatherapp.project.viewmodels.MainViewModel
@@ -19,10 +17,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherAppTheme {
-                val mainViewModel= viewModel<MainViewModel>()
+                val mainViewModel = viewModel<MainViewModel>()
+
                 HomeScreen(mainViewModel)
             }
         }
     }
 }
-

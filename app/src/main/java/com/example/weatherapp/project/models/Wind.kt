@@ -1,7 +1,6 @@
 package com.example.weatherapp.project.models
 
-data class Wind(
-        val chill: Int,
-        val direction: String,
-        val speed: Int,
+data class Wind (
+val speed:Double,
+val deg:Int
 )

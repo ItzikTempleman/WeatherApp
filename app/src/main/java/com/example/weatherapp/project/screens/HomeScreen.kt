@@ -1,5 +1,6 @@
 package com.example.weatherapp.project.screens
 
+
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -23,16 +23,18 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.viewmodels.MainViewModel
 
-
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
-    val weather = mainViewModel.getWeatherResponse("c", "New York").observeAsState().value
+    var searchedLocation = ""
+    var temperatureStrValue=""
 
-//    var cityName = weather?.location?.city
-//    val temperatureResult = weather?.observation?.condition?.temperature.toString()
+
+
+
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
+
         val textColor = colorResource(R.color.lighter_grey)
         var newChar by remember { mutableStateOf("") }
         val celsiusBtn = stringResource(id = R.string.celsius)
@@ -41,6 +43,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             appName,
             enterLocationTF,
             cityNameText,
+            searchBtn,
             temperature,
             celsius,
             dash,
@@ -60,19 +63,24 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             text = stringResource(id = R.string.app_name),
             fontSize = 18.sp
         )
-        TextField(modifier = Modifier
-            .width(300.dp)
-            .padding(12.dp)
-            .border(color = colorResource(id = R.color.dark_blue),
-                width = 0.4.dp,
-                shape = RoundedCornerShape(8.dp))
-            .constrainAs(enterLocationTF) {
-                start.linkTo(parent.start)
-                top.linkTo(appName.bottom)
-            }, value = newChar,
+
+
+
+        TextField(value = newChar,
             onValueChange = {
                 newChar = it
+                searchedLocation = newChar
             },
+            modifier = Modifier
+                .width(300.dp)
+                .padding(12.dp)
+                .border(color = colorResource(id = R.color.dark_blue),
+                    width = 0.4.dp,
+                    shape = RoundedCornerShape(8.dp))
+                .constrainAs(enterLocationTF) {
+                    start.linkTo(parent.start)
+                    top.linkTo(appName.bottom)
+                },
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.search)
@@ -88,6 +96,8 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
+            singleLine = true,
+
             shape = RoundedCornerShape(8.dp),
             leadingIcon = {
                 Icon(
@@ -97,6 +107,23 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 )
             }
         )
+
+        Button(onClick = {
+            val weatherResponse = mainViewModel.getWeatherResponse(searchedLocation).value!!
+            temperatureStrValue=weatherResponse.main.temp.toString()
+        },
+
+            modifier = Modifier
+                .padding(horizontal = 2.dp, vertical = 6.dp)
+                .constrainAs(searchBtn) {
+                    top.linkTo(enterLocationTF.top)
+                    bottom.linkTo(enterLocationTF.bottom)
+                    start.linkTo(enterLocationTF.end)
+                }
+        ) {
+
+        }
+
 
         Text(
             modifier = Modifier
@@ -110,7 +137,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     top.linkTo(enterLocationTF.bottom)
                     start.linkTo(parent.start)
                 },
-            text = "London",
+            text = searchedLocation,
             fontSize = 28.sp
         )
 
@@ -123,7 +150,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     start.linkTo(parent.start)
 
                 },
-            text = "12",
+            text = temperatureStrValue,
             fontSize = 48.sp)
 
 

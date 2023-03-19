@@ -9,8 +9,7 @@ interface Requests {
 
     @GET("weather?")
     suspend fun getWeatherData(
-        @Query("u") units: String,
-        @Query("location") cityName: String
+        @Query("city") cityName: String
     ): Response<WeatherResponse>
 }
 
