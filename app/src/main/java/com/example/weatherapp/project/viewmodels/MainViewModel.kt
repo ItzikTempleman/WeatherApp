@@ -1,34 +1,49 @@
 package com.example.weatherapp.project.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.project.models.WeatherResponse
 import com.example.weatherapp.project.repositories.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel
 @Inject constructor(private val repository: Repository) : ViewModel() {
-
-    fun getWeatherResponse( city: String): MutableLiveData<WeatherResponse>{
-        val weatherList: MutableLiveData<WeatherResponse> = MutableLiveData()
-        viewModelScope.launch {
+    fun getWeatherResponse(city: String): Flow<Response<WeatherResponse>> {
+        val weatherListFlow = flow {
             val response = repository.getWeather(city)
+           Log.d("TAG", "second failure message:  ${repository.getWeather(city)}")
+
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 if (responseBody != null) {
-                    weatherList.value = responseBody
+                    emit(response)
+                    //collectFlow()
                 } else Log.d("TAG", "first failure message: " + response.message())
-                return@launch
+                return@flow
             } else Log.d("TAG", "second failure message: " + response.message())
-            return@launch
+            return@flow
         }
-        return weatherList
+        return weatherListFlow
     }
+
+
+    private fun collectFlow(weatherListFlow:Flow<Response<WeatherResponse>>){
+        viewModelScope.launch {
+            weatherListFlow.collect{
+
+            }
+        }
+    }
+
 }
+
+
