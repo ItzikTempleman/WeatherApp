@@ -17,16 +17,13 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel
 @Inject constructor(private val repository: Repository) : ViewModel() {
-    fun getWeatherResponse(city: String): Flow<Response<WeatherResponse>> {
+    fun getWeatherResponse(city: String): Flow<WeatherResponse> {
         val weatherListFlow = flow {
             val response = repository.getWeather(city)
-           Log.d("TAG", "second failure message:  ${repository.getWeather(city)}")
-
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 if (responseBody != null) {
-                    emit(response)
-                    //collectFlow()
+                    emit(responseBody)
                 } else Log.d("TAG", "first failure message: " + response.message())
                 return@flow
             } else Log.d("TAG", "second failure message: " + response.message())
@@ -34,16 +31,6 @@ class MainViewModel
         }
         return weatherListFlow
     }
-
-
-    private fun collectFlow(weatherListFlow:Flow<Response<WeatherResponse>>){
-        viewModelScope.launch {
-            weatherListFlow.collect{
-
-            }
-        }
-    }
-
 }
 
 

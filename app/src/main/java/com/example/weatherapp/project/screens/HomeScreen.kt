@@ -1,14 +1,16 @@
 package com.example.weatherapp.project.screens
 
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,14 +25,16 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.viewmodels.MainViewModel
+import kotlinx.coroutines.launch
 
 var isBtnIsClicked = mutableStateOf(false)
 
 
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
-    var searchedLocation = "_"
-    val weather = getEmptyData()
+
+
+    var weather = getEmptyData()
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -70,7 +74,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         TextField(value = newChar,
             onValueChange = {
                 newChar = it
-                searchedLocation = newChar
             },
             modifier = Modifier
                 .width(300.dp)
@@ -102,12 +105,17 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             shape = RoundedCornerShape(8.dp)
         )
 
-
+        val composableScope = rememberCoroutineScope()
         SymbolIcon(onClick = {
-            isBtnIsClicked.value = true
+            composableScope.launch {
+                mainViewModel.getWeatherResponse(newChar).collect {
+                    weather = it
+                    isBtnIsClicked.value = true
+                    Log.d("TAG1", "weather= $weather")
+                }
+            }
         },
-            Modifier
-                .constrainAs(searchBtn) {
+            Modifier.constrainAs(searchBtn) {
                     top.linkTo(enterLocationTF.top)
                     bottom.linkTo(enterLocationTF.bottom)
                     start.linkTo(enterLocationTF.end)
@@ -128,7 +136,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     top.linkTo(enterLocationTF.bottom)
                     start.linkTo(parent.start)
                 },
-            text = if (isBtnIsClicked.value) searchedLocation else weather.cityName,
+            text = if (isBtnIsClicked.value) newChar else weather.cityName,
             fontSize = 28.sp
         )
 
@@ -136,12 +144,10 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             modifier = Modifier
                 .padding(start = 12.dp)
                 .constrainAs(temperature) {
-
                     top.linkTo(cityNameText.bottom)
                     start.linkTo(parent.start)
-
                 },
-            text = weather.main.temp.toString(),
+            text = weather.main.temp.toInt().toString(),
             fontSize = 48.sp)
 
 
