@@ -1,7 +1,6 @@
 package com.example.weatherapp.project.screens
 
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -44,6 +43,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         var newChar by remember { mutableStateOf("") }
         val celsiusBtn = stringResource(id = R.string.celsius)
         val fahrenheitBtn = stringResource(id = R.string.fahrenheit)
+
         val (
             appName,
             enterLocationTF,
@@ -68,8 +68,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             text = stringResource(id = R.string.app_name),
             fontSize = 18.sp
         )
-
-
 
         TextField(value = newChar,
             onValueChange = {
@@ -105,13 +103,13 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             shape = RoundedCornerShape(8.dp)
         )
 
-        val composableScope = rememberCoroutineScope()
+        val coroutineScope = rememberCoroutineScope()
         SymbolIcon(onClick = {
-            composableScope.launch {
+
+            coroutineScope.launch {
                 mainViewModel.getWeatherResponse(newChar).collect {
                     weather = it
                     isBtnIsClicked.value = true
-                    Log.d("TAG1", "weather= $weather")
                 }
             }
         },
@@ -166,7 +164,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 changeValue(true)
             }
         )
-
 
         Text(
             modifier = Modifier
