@@ -1,13 +1,15 @@
 package com.example.weatherapp.project.modules
 
+
 import com.example.weatherapp.project.requests.Requests
 import com.example.weatherapp.project.requests.WeatherRequestInterceptor
 import com.example.weatherapp.project.main.Constants.BASE_URL
-import com.example.weatherapp.project.main.Converters
-import com.example.weatherapp.project.repositories.Repository
+
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -17,8 +19,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    /**
     private val typeConverter = Converters()
-
+     */
 
     @Provides
     @Singleton
@@ -38,4 +41,18 @@ object AppModule {
     @Provides
     fun provideRequestService(retrofit: Retrofit): Requests =
         retrofit.create(Requests::class.java)
+
+   /** @Provides
+    @Singleton
+    fun provideDb(@ApplicationContext context: Context) = Room.databaseBuilder(
+        context, AppDatabase::class.java, WEATHER_RESPONSE_DATABASE)
+       addTypeConverter(typeConverter).
+        .allowMainThreadQueries()
+        .fallbackToDestructiveMigration()
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideDao(appDatabase: AppDatabase): AppDao = appDatabase.getDao()
+*/
 }

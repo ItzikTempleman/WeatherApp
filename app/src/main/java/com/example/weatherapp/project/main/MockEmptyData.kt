@@ -30,7 +30,6 @@ fun getEmptyData(): WeatherResponse {
             sunSet = 0.0
         ),
         timezone = 0,
-        id = 0,
         cityName = "empty",
         code = 0
     )

@@ -1,7 +1,12 @@
 package com.example.weatherapp.project.models
 
+import android.os.Parcelable
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Entity
+@Parcelize
 data class Main(
         val temp: Double,
         @SerializedName("feels_like")
@@ -12,4 +17,4 @@ data class Main(
         val tempMax: Double,
         val pressure: Int,
         val humidity: Int
-)
+): Parcelable
