@@ -221,3 +221,8 @@ fun convertFromCelsiusToFahrenheit(celsiusValue:Double):Int {
 return 0
 }
 
+/*
+
+ celsius=(fahrenheit-32)*.5556
+
+ */
