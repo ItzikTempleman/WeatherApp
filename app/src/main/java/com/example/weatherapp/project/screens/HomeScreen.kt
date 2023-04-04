@@ -2,11 +2,9 @@ package com.example.weatherapp.project.screens
 
 
 import android.view.KeyEvent.KEYCODE_ENTER
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
@@ -15,16 +13,12 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onKeyEvent
-
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -36,18 +30,15 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.viewmodels.MainViewModel
-import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.launch
 
-var isBtnIsClicked = mutableStateOf(false)
-
-
+var isCelsius = mutableStateOf(false)
+var weather = getEmptyData()
+var temp= 0
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
 
-
-    var weather = getEmptyData()
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -99,7 +90,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     end.linkTo(parent.end)
                 }
 
-                .onKeyEvent { it ->
+                .onKeyEvent {
                     if (it.nativeKeyEvent.keyCode == KEYCODE_ENTER) {
                         focusRequester.requestFocus()
                         true
@@ -129,7 +120,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     coroutineScope.launch {
                         mainViewModel.getWeatherResponse(newChar).collect {
                             weather = it
-                            isBtnIsClicked.value = true
+                            temp=it.main.temp.toInt()
                         }
                     }
                 }
@@ -148,7 +139,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     top.linkTo(searchET.bottom)
                     start.linkTo(parent.start)
                 },
-            text = if (isBtnIsClicked.value) newChar else weather.cityName,
+            text = weather.cityName,
             fontSize = 28.sp
         )
 
@@ -159,9 +150,10 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     top.linkTo(cityNameText.bottom)
                     start.linkTo(parent.start)
                 },
-            text = weather.main.temp.toInt().toString(),
-            fontSize = 48.sp)
-
+            fontSize = 48.sp,
+            text = if (isCelsius.value) convertFromFahrenheitToCelsius(temp).toString()
+            else convertFromCelsiusToFahrenheit(temp).toString()
+        )
 
         ClickableText(
             modifier = Modifier
@@ -175,7 +167,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 fontSize = 20.sp
             ),
             onClick = {
-                changeValue(true)
+                isCelsius.value = true
             }
         )
 
@@ -201,28 +193,15 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             ),
             text = AnnotatedString(fahrenheitBtn),
             onClick = {
-                changeValue(false)
+                isCelsius.value = false
             }
         )
     }
 }
 
 
-fun changeValue(isCelsius: Boolean) {
-//    if (!isCelsius) convertFromMetricToImperial()
-//    else convertFromImperialToMetric()
-}
+fun convertFromFahrenheitToCelsius(fahrenheit: Int): Int = (fahrenheit - 32 * 5 / 9 )
 
-fun convertFromFahrenheitToCelsius(fahrenheitValue:Double):Int {
-return 0
-}
 
-fun convertFromCelsiusToFahrenheit(celsiusValue:Double):Int {
-return 0
-}
+fun convertFromCelsiusToFahrenheit(celsius: Int): Int = (celsius * 9 / 5 + 32)
 
-/*
-
- celsius=(fahrenheit-32)*.5556
-
- */
