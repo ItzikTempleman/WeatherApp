@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -21,8 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,9 +29,11 @@ import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
-var isCelsius = mutableStateOf(false)
+var isSearched = mutableStateOf(false)
+
 var weather = getEmptyData()
-var temp= 0
+
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
@@ -46,32 +45,19 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
 
         var newChar by remember { mutableStateOf("") }
-        val celsiusBtn = stringResource(id = R.string.celsius)
-        val fahrenheitBtn = stringResource(id = R.string.fahrenheit)
+
 
         val (
-            appName,
             searchET,
             cityNameText,
+            countryNameText,
+            conditionText,
             temperature,
-            celsius,
-            dash,
-            fahrenheit,
+        percent
         ) = createRefs()
 
 
 
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 6.dp)
-                .constrainAs(appName) {
-
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                },
-            text = stringResource(id = R.string.app_name),
-            fontSize = 18.sp
-        )
 
         val (focusRequester) = FocusRequester.createRefs()
         val coroutineScope = rememberCoroutineScope()
@@ -86,14 +72,13 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 .padding(12.dp)
                 .constrainAs(searchET) {
                     start.linkTo(parent.start)
-                    top.linkTo(appName.bottom)
+                    top.linkTo(parent.top)
                     end.linkTo(parent.end)
                 }
 
                 .onKeyEvent {
                     if (it.nativeKeyEvent.keyCode == KEYCODE_ENTER) {
                         focusRequester.requestFocus()
-                        true
                     }
                     false
                 },
@@ -106,7 +91,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 Icon(
                     painter = painterResource(R.drawable.search),
                     contentDescription = "search icon")
-            } ,
+            },
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
@@ -120,7 +105,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     coroutineScope.launch {
                         mainViewModel.getWeatherResponse(newChar).collect {
                             weather = it
-                            temp=it.main.temp.toInt()
+                            isSearched.value = true
                         }
                     }
                 }
@@ -130,78 +115,63 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         Text(
             modifier = Modifier
                 .padding(
-                    start = 12.dp,
-                    top = 4.dp,
-                    bottom = 4.dp
+                    top = 48.dp,
                 )
                 .constrainAs(cityNameText) {
-
+                    end.linkTo(parent.end)
                     top.linkTo(searchET.bottom)
                     start.linkTo(parent.start)
                 },
             text = weather.cityName,
             fontSize = 28.sp
         )
-
         Text(
             modifier = Modifier
-                .padding(start = 12.dp)
-                .constrainAs(temperature) {
+                .constrainAs(countryNameText) {
+                    end.linkTo(parent.end)
                     top.linkTo(cityNameText.bottom)
                     start.linkTo(parent.start)
                 },
-            fontSize = 48.sp,
-            text = if (isCelsius.value) convertFromFahrenheitToCelsius(temp).toString()
-            else convertFromCelsiusToFahrenheit(temp).toString()
-        )
-
-        ClickableText(
-            modifier = Modifier
-                .padding(vertical = 8.dp, horizontal = 2.dp)
-                .constrainAs(celsius) {
-                    top.linkTo(temperature.top)
-                    start.linkTo(temperature.end)
-                },
-            text = AnnotatedString(celsiusBtn),
-            style = TextStyle(
-                fontSize = 20.sp
-            ),
-            onClick = {
-                isCelsius.value = true
-            }
+            text = weather.moreInfo.country,
+            fontSize = 20.sp
         )
 
         Text(
             modifier = Modifier
-                .padding(vertical = 8.dp, horizontal = 2.dp)
-                .constrainAs(dash) {
-                    top.linkTo(celsius.top)
-                    start.linkTo(celsius.end)
+                .constrainAs(temperature) {
+                    top.linkTo(countryNameText.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
                 },
-            text = stringResource(id = R.string.dash),
-            fontSize = 20.sp)
-
-        ClickableText(
-            modifier = Modifier
-                .padding(vertical = 8.dp, horizontal = 2.dp)
-                .constrainAs(fahrenheit) {
-                    top.linkTo(celsius.top)
-                    start.linkTo(dash.end)
-                },
-            style = TextStyle(
-                fontSize = 20.sp
-            ),
-            text = AnnotatedString(fahrenheitBtn),
-            onClick = {
-                isCelsius.value = false
-            }
+            fontSize = 48.sp,
+            text = if (isSearched.value) convertFromFahrenheitToCelsius(weather.main.temp).toInt()
+                .toString() else getEmptyData().cityName
         )
+        Text(
+            modifier = Modifier
+                .constrainAs(percent) {
+                    top.linkTo(temperature.top)
+                    start.linkTo(temperature.end)
+                },
+            fontSize = 20.sp,
+            text = if (isSearched.value) "o"
+               else getEmptyData().cityName
+        )
+        Text(
+            modifier = Modifier
+                .constrainAs(conditionText) {
+                    top.linkTo(temperature.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            fontSize = 20.sp,
+            text = if (isSearched.value) weather.weather[0].description
+            else getEmptyData().cityName
+        )
+
     }
 }
 
+fun convertFromFahrenheitToCelsius(fahrenheit: Double): Double = ((fahrenheit - 32) * 5 / 9)
 
-fun convertFromFahrenheitToCelsius(fahrenheit: Int): Int = (fahrenheit - 32 * 5 / 9 )
-
-
-fun convertFromCelsiusToFahrenheit(celsius: Int): Int = (celsius * 9 / 5 + 32)
 
