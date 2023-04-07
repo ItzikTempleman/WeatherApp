@@ -3,10 +3,7 @@ package com.example.weatherapp.project.screens
 
 import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -35,8 +31,15 @@ import kotlinx.coroutines.launch
 
 var isSearched = mutableStateOf(false)
 
-var weather = getEmptyData()
+var weatherModel = getEmptyData()
 
+
+var isProgressBarVisible = mutableStateOf(false)
+
+
+fun stopProgressBar() {
+    isProgressBarVisible.value=false
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -52,12 +55,13 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
 
         val (
+            progressbar,
             searchET,
             cityNameText,
             countryNameText,
             conditionText,
             temperature,
-        percent
+            percent,
         ) = createRefs()
 
 
@@ -70,6 +74,19 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             painter = painterResource(R.drawable.wallpaper),
             contentDescription = "background_image",
             contentScale = ContentScale.FillBounds
+        )
+
+        GenerateProgressBar(
+            modifier = Modifier
+                .width(44.dp)
+                .height(44.dp)
+                .constrainAs(progressbar) {
+                    start.linkTo(parent.start)
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                },
+            isVisible = isProgressBarVisible.value
         )
 
         TextField(
@@ -113,9 +130,11 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
+                    isProgressBarVisible.value=true
                     coroutineScope.launch {
                         mainViewModel.getWeatherResponse(newChar).collect {
-                            weather = it
+                            weatherModel = it
+                            newChar=""
                             isSearched.value = true
                         }
                     }
@@ -133,9 +152,10 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     top.linkTo(searchET.bottom)
                     start.linkTo(parent.start)
                 },
-            text = weather.cityName,
+            text = weatherModel.cityName,
             fontSize = 28.sp
         )
+
         Text(
             modifier = Modifier
                 .constrainAs(countryNameText) {
@@ -143,7 +163,8 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     top.linkTo(cityNameText.bottom)
                     start.linkTo(parent.start)
                 },
-            text = weather.moreInfo.country,
+            text = getFullCountryName(weatherModel.moreInfo.country),
+
             fontSize = 20.sp
         )
 
@@ -155,7 +176,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     end.linkTo(parent.end)
                 },
             fontSize = 48.sp,
-            text = if (isSearched.value) convertFromFahrenheitToCelsius(weather.main.temp).toInt()
+            text = if (isSearched.value) convertFromFahrenheitToCelsius(weatherModel.main.temp).toInt()
                 .toString() else getEmptyData().cityName
         )
         Text(
@@ -176,13 +197,13 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     end.linkTo(parent.end)
                 },
             fontSize = 20.sp,
-            text = if (isSearched.value) weather.weather[0].description
+            text = if (isSearched.value) capitalizeDesc(weatherModel.weather[0].description)
             else getEmptyData().cityName
         )
-
     }
 }
 
-fun convertFromFahrenheitToCelsius(fahrenheit: Double): Double = ((fahrenheit - 32) * 5 / 9)
+
+
 
 
