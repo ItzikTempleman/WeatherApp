@@ -2,6 +2,8 @@ package com.example.weatherapp.project.screens
 
 
 import android.view.KeyEvent.KEYCODE_ENTER
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -61,6 +65,12 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
         val (focusRequester) = FocusRequester.createRefs()
         val coroutineScope = rememberCoroutineScope()
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            painter = painterResource(R.drawable.wallpaper),
+            contentDescription = "background_image",
+            contentScale = ContentScale.FillBounds
+        )
 
         TextField(
             value = newChar,
@@ -93,9 +103,10 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     contentDescription = "search icon")
             },
             colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-
+                cursorColor=colorResource(R.color.black),
+                focusedIndicatorColor = colorResource(R.color.transparent),
+                unfocusedIndicatorColor = colorResource(R.color.transparent),
+                backgroundColor=colorResource(R.color.semi_transparent)
             ),
             singleLine = true,
             shape = RoundedCornerShape(8.dp),
