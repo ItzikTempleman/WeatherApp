@@ -9,6 +9,12 @@ object Constants  {
     const val API_HOST_NAME = "x-rapidapi-host"
     const val API_HOST_VALUE = "open-weather13.p.rapidapi.com"
 
+
+    const val WEATHER_ICON_URL = "http://openweathermap.org/img/wn/"
+    const val WEATHER_ICON_URL_ENDING = "@2x.png"
+
+
     const val WEATHER_RESPONSE_TABLE_TABLE="weatherResponseTable"
     const val WEATHER_RESPONSE_DATABASE = "conversationDatabase"
+
 }
