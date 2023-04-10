@@ -1,22 +1,25 @@
 package com.example.weatherapp.project.screens
 
 
-import android.util.Log
 import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.viewmodels.MainViewModel
@@ -33,7 +36,7 @@ fun stopProgressBar() {
     isProgressBarVisible.value=false
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalCoilApi::class)
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
 
@@ -153,24 +156,19 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
 
         if (isSearched.value) {
-            val image = loadPicture(url = weatherModel.weather[0].getImage())
-            Log.d("TAG",weatherModel.weather[0].getImage())
-            image.value?.asImageBitmap()?.let {
-                Image(
-                    modifier = Modifier
-                        .height(70.dp)
-                        .width(70.dp)
-                        .constrainAs(icon) {
-                            top.linkTo(cityNameText.top)
-                            end.linkTo(cityNameText.start)
-                            start.linkTo(parent.start)
-                            bottom.linkTo(cityNameText.bottom)
-                        },
-                    bitmap = it,
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "icon"
-                )
-            }
+            val painter = rememberImagePainter(data = weatherModel.weather[0].getImage())
+            Image(
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(100.dp)
+                    .constrainAs(icon) {
+                        end.linkTo(cityNameText.start)
+                        start.linkTo(parent.start)
+                        bottom.linkTo(countryNameText.top)
+                    },
+                painter = painter,
+                contentDescription = "icon"
+            )
         }
 
 
@@ -182,40 +180,17 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            fontSize = 34.sp,
+            fontSize = 20.sp,
             text = if (isSearched.value) capitalizeDesc(weatherModel.weather[0].description)
-            else getEmptyData().cityName
+            else getEmptyData().cityName,
+            fontWeight = FontWeight.Bold
         )
 
 
-
-        Text(
-            modifier = Modifier
-                .constrainAs(l) {
-                    top.linkTo(conditionText.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-
-                },
-            fontSize = 16.sp,
-            text = if (isSearched.value) "Low: "
-            else getEmptyData().cityName
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(min) {
-                    top.linkTo(conditionText.bottom)
-                    start.linkTo(l.end)
-                },
-            fontSize = 22.sp,
-            text = if (isSearched.value && weatherModel.main.tempMin.toInt() != weatherModel.main.tempMax.toInt()) {
-                convertFromFahrenheitToCelsius(weatherModel.main.tempMin).toInt().toString()
-            } else getEmptyData().cityName
-        )
         Text(
             modifier = Modifier
                 .constrainAs(h) {
-                    top.linkTo(l.bottom)
+                    top.linkTo(conditionText.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
 
@@ -227,7 +202,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         Text(
             modifier = Modifier
                 .constrainAs(max) {
-                    top.linkTo(l.bottom)
+                    top.linkTo(conditionText.bottom)
                     start.linkTo(h.end)
 
                 },
@@ -235,6 +210,30 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             text = if (isSearched.value) convertFromFahrenheitToCelsius(weatherModel.main.tempMax).toInt()
                 .toString()
             else getEmptyData().cityName
+        )
+
+        Text(
+            modifier = Modifier
+                .constrainAs(l) {
+                    top.linkTo(h.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+
+                },
+            fontSize = 16.sp,
+            text = if (isSearched.value) "Low: "
+            else getEmptyData().cityName
+        )
+        Text(
+            modifier = Modifier
+                .constrainAs(min) {
+                    top.linkTo(h.bottom)
+                    start.linkTo(l.end)
+                },
+            fontSize = 22.sp,
+            text = if (isSearched.value && weatherModel.main.tempMin.toInt() != weatherModel.main.tempMax.toInt()) {
+                convertFromFahrenheitToCelsius(weatherModel.main.tempMin).toInt().toString()
+            } else getEmptyData().cityName
         )
     }
 }
