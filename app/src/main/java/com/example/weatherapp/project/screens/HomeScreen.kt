@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
+
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,20 +47,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
     ) {
 
 
-        val (
-            progressbar,
-            searchET,
-            cityNameText,
-            countryNameText,
-            conditionText,
-            temperature,
-            percent,
-            icon,
-            h,
-            max,
-            l,
-            min,
-        ) = createRefs()
+        val (progressbar, searchET, cityNameText, countryNameText, humidityIcon, humidityValue, conditionText, temperature, degrees, icon, h, max, sun, l, min, moon) = createRefs()
 
 
         val (focusRequester) = FocusRequester.createRefs()
@@ -131,6 +119,35 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             fontSize = 20.sp
         )
 
+        if (isSearched.value) {
+            Image(
+                modifier = Modifier.padding(start = 24.dp)
+                    .height(20.dp)
+                    .width(20.dp)
+                    .constrainAs(humidityIcon) {
+                        start.linkTo(countryNameText.end)
+                        top.linkTo(countryNameText.top)
+                        bottom.linkTo(countryNameText.bottom)
+                    },
+                painter = painterResource(R.drawable.humidity),
+                contentDescription = "humidity"
+            )
+        }
+
+
+        Text(
+            modifier = Modifier.padding(start = 4.dp)
+                .constrainAs(humidityValue) {
+                    start.linkTo(humidityIcon.end)
+                    top.linkTo(countryNameText.top)
+                    bottom.linkTo(countryNameText.bottom)
+                },
+            fontSize = 20.sp,
+            text = if (isSearched.value) weatherModel.main.humidity.toString() +"%" else getEmptyData().cityName
+        )
+
+
+
         Text(
             modifier = Modifier
                 .constrainAs(temperature) {
@@ -144,7 +161,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         )
         Text(
             modifier = Modifier
-                .constrainAs(percent) {
+                .constrainAs(degrees) {
                     top.linkTo(temperature.top)
                     start.linkTo(temperature.end)
                 },
@@ -185,56 +202,89 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             else getEmptyData().cityName,
             fontWeight = FontWeight.Bold
         )
+        if (isSearched.value) {
+            Image(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .constrainAs(sun) {
+                        top.linkTo(conditionText.bottom)
+                        end.linkTo(h.start)
+                    }
+                    .height(20.dp)
+                    .width(20.dp),
+                painter = painterResource(R.drawable.sun),
+                contentDescription = "sun",
+                contentScale = ContentScale.FillBounds
+            )
 
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .constrainAs(h) {
+                        top.linkTo(conditionText.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
 
-        Text(
-            modifier = Modifier
-                .constrainAs(h) {
-                    top.linkTo(conditionText.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
+                    },
+                fontSize = 16.sp,
+                text = if (isSearched.value) "High: "
+                else getEmptyData().cityName
+            )
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .constrainAs(max) {
+                        top.linkTo(conditionText.bottom)
+                        start.linkTo(h.end)
 
-                },
-            fontSize = 16.sp,
-            text = if (isSearched.value) "High: "
-            else getEmptyData().cityName
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(max) {
-                    top.linkTo(conditionText.bottom)
-                    start.linkTo(h.end)
+                    },
+                fontSize = 16.sp,
+                text = if (isSearched.value) convertFromFahrenheitToCelsius(weatherModel.main.tempMax).toInt()
+                    .toString()
+                else getEmptyData().cityName,
+                fontWeight = FontWeight.Bold
+            )
 
-                },
-            fontSize = 22.sp,
-            text = if (isSearched.value) convertFromFahrenheitToCelsius(weatherModel.main.tempMax).toInt()
-                .toString()
-            else getEmptyData().cityName
-        )
+            Image(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .constrainAs(moon) {
+                        top.linkTo(h.bottom)
+                        end.linkTo(l.start)
+                    }
+                    .height(20.dp)
+                    .width(20.dp),
+                painter = painterResource(R.drawable.moon),
+                contentDescription = "moon",
+                contentScale = ContentScale.FillBounds
+            )
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .constrainAs(l) {
+                        top.linkTo(h.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
 
-        Text(
-            modifier = Modifier
-                .constrainAs(l) {
-                    top.linkTo(h.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-
-                },
-            fontSize = 16.sp,
-            text = if (isSearched.value) "Low: "
-            else getEmptyData().cityName
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(min) {
-                    top.linkTo(h.bottom)
-                    start.linkTo(l.end)
-                },
-            fontSize = 22.sp,
-            text = if (isSearched.value && weatherModel.main.tempMin.toInt() != weatherModel.main.tempMax.toInt()) {
-                convertFromFahrenheitToCelsius(weatherModel.main.tempMin).toInt().toString()
-            } else getEmptyData().cityName
-        )
+                    },
+                fontSize = 16.sp,
+                text = if (isSearched.value) "Low: "
+                else getEmptyData().cityName
+            )
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .constrainAs(min) {
+                        top.linkTo(h.bottom)
+                        start.linkTo(l.end)
+                    },
+                fontSize = 16.sp,
+                text = if (isSearched.value && weatherModel.main.tempMin.toInt() != weatherModel.main.tempMax.toInt()) {
+                    convertFromFahrenheitToCelsius(weatherModel.main.tempMin).toInt().toString()
+                } else getEmptyData().cityName,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 

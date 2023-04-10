@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.models
+package com.example.weatherapp.project.models.current_weather
 
 import android.os.Parcelable
 import androidx.room.Entity

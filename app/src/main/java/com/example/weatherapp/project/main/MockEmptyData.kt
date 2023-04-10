@@ -1,6 +1,6 @@
 package com.example.weatherapp.project.main
 
-import com.example.weatherapp.project.models.*
+import com.example.weatherapp.project.models.current_weather.*
 
 fun getEmptyData(): WeatherResponse {
     return WeatherResponse(
