@@ -54,7 +54,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (progressbar, searchET, cityNameText, countryNameText, humidityIcon, humidityValue, conditionText, temperature, feelsLike, feelsLikeVal,degrees, icon, max, sun, min, moon)  = createRefs()
+        val (progressbar, searchET, cityNameText, countryNameText, humidityIcon, humidityValue, conditionText, temperature, feelsLike,degrees, icon, max, sun, min, moon)  = createRefs()
         GenerateProgressBar(
             modifier = Modifier
                 .width(44.dp)
@@ -114,6 +114,9 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             fontSize = 16.sp
         )
 
+
+
+
         if (isSearched.value) {
             Image(
                 modifier = Modifier
@@ -166,6 +169,21 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             text = if (isSearched.value) "o"
             else getEmptyData().cityName
         )
+
+
+        Text(
+            modifier = Modifier
+                .constrainAs(feelsLike) {
+                    top.linkTo(temperature.top)
+                    start.linkTo(degrees.end)
+                    bottom.linkTo(temperature.bottom)
+                }.padding(start = 4.dp),
+            fontSize = 18.sp,
+            text = if (isSearched.value) "(feels like ${convertFromFahrenheitToCelsius(weatherModel.main.feelsLike).toInt()})"
+            else getEmptyData().cityName
+        )
+
+
 
 
 
