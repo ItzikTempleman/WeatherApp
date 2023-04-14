@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.weatherapp.R
@@ -38,10 +39,10 @@ fun MainTextField(
         modifier = modifier,
         placeholder = {
             Text(
-                text = stringResource(id = R.string.search),
+                text = stringResource(id = R.string.search), fontWeight = FontWeight.Black
             )
         },
-        trailingIcon = {
+        leadingIcon = {
             Icon(
                 painter = painterResource(R.drawable.search),
                 contentDescription = "search icon")
@@ -50,7 +51,7 @@ fun MainTextField(
             cursorColor = colorResource(R.color.black),
             focusedIndicatorColor = colorResource(R.color.transparent),
             unfocusedIndicatorColor = colorResource(R.color.transparent),
-            backgroundColor = colorResource(R.color.semi_transparent)
+            backgroundColor = colorResource(R.color.transparent)
         ),
         singleLine = true,
         shape = RoundedCornerShape(8.dp),

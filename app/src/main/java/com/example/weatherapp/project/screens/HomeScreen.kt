@@ -32,17 +32,12 @@ var forecast = getForecastEmptyData()
 var forecastItems: List<ForecastItem> = getForecastEmptyData().hourlyList
 var isProgressBarVisible = mutableStateOf(false)
 
-
-fun stopProgressBar() {
-    isProgressBarVisible.value = false
-}
-
-
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalCoilApi::class)
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val (focusRequester) = FocusRequester.createRefs()
+
     Image(
         modifier = Modifier.fillMaxSize(),
         painter = painterResource(R.drawable.wall),
@@ -51,10 +46,10 @@ fun HomeScreen(mainViewModel: MainViewModel) {
     )
 
     ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
-        val (progressbar, searchET, cityNameText, countryNameText, humidityIcon, humidityValue, conditionText, temperature, feelsLike,degrees, icon, max, sun, min, moon)  = createRefs()
+        val (progressbar, searchET, cityNameText, countryNameText, humidityIcon, humidityValue, conditionText, temperature, feelsLike, degrees, icon, max, sun, min, moon) = createRefs()
+
         GenerateProgressBar(
             modifier = Modifier
                 .width(44.dp)
@@ -68,57 +63,51 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             isVisible = isProgressBarVisible.value
         )
 
-        MainTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-                .constrainAs(searchET) {
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                }
+        MainTextField(modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .constrainAs(searchET) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+                end.linkTo(parent.end)
+            }
 
-                .onKeyEvent {
-                    if (it.nativeKeyEvent.keyCode == KEYCODE_ENTER) {
-                        focusRequester.requestFocus()
-                    }
-                    false
-                },
+            .onKeyEvent {
+                if (it.nativeKeyEvent.keyCode == KEYCODE_ENTER) {
+                    focusRequester.requestFocus()
+                }
+                false
+            },
             coroutineScope = coroutineScope,
             mainViewModel = mainViewModel
         )
 
 
         if (isSearched.value) {
+            val painter = rememberImagePainter(data = weatherModel.weather[0].getImage())
+
             Text(
                 modifier = Modifier
-                    .padding(
-                        top = 40.dp,
-                    )
                     .constrainAs(cityNameText) {
                         end.linkTo(parent.end)
                         top.linkTo(searchET.bottom)
                         start.linkTo(parent.start)
                     },
-            text = weatherModel.cityName,
-            fontSize = 40.sp
-        )
+                text = weatherModel.cityName,
+                fontSize = 32.sp
+            )
 
-        Text(
-            modifier = Modifier
-                .constrainAs(countryNameText) {
-                    end.linkTo(parent.end)
-                    top.linkTo(cityNameText.bottom)
-                    start.linkTo(parent.start)
-                },
-            text = getFullCountryName(weatherModel.moreInfo.country),
+            Text(
+                modifier = Modifier
+                    .constrainAs(countryNameText) {
+                        end.linkTo(parent.end)
+                        top.linkTo(cityNameText.bottom)
+                        start.linkTo(parent.start)
+                    },
+                text = getFullCountryName(weatherModel.moreInfo.country),
 
-            fontSize = 16.sp
-        )
-
-
-
-
+                fontSize = 16.sp
+            )
 
             Image(
                 modifier = Modifier
@@ -134,8 +123,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 contentDescription = "humidity"
             )
 
-
-
             Text(
                 modifier = Modifier
                     .padding(start = 4.dp)
@@ -148,88 +135,76 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 text = weatherModel.main.humidity.toString() + "%"
             )
 
+            Text(
+                modifier = Modifier
+                    .constrainAs(temperature) {
+                        top.linkTo(countryNameText.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                fontSize = 54.sp,
+                text = convertFromFahrenheitToCelsius(weatherModel.main.temp).toInt()
+                    .toString()
+            )
+            Text(
+                modifier = Modifier
+                    .constrainAs(degrees) {
+                        top.linkTo(temperature.top)
+                        start.linkTo(temperature.end)
+                    },
+                fontSize = 20.sp,
+                text = "o"
+            )
 
-
-        Text(
-            modifier = Modifier
-                .constrainAs(temperature) {
-                    top.linkTo(countryNameText.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            fontSize = 54.sp,
-            text = convertFromFahrenheitToCelsius(weatherModel.main.temp).toInt()
-                .toString()
-        )
-        Text(
-            modifier = Modifier
-                .constrainAs(degrees) {
-                    top.linkTo(temperature.top)
-                    start.linkTo(temperature.end)
-                },
-            fontSize = 20.sp,
-            text = "o"
-
-        )
-
-
-        Text(
-            modifier = Modifier
+            Text(modifier = Modifier
                 .constrainAs(feelsLike) {
                     top.linkTo(temperature.top)
                     start.linkTo(degrees.end)
                     bottom.linkTo(temperature.bottom)
                 }
                 .padding(start = 4.dp),
-            fontSize = 18.sp,
-            text = "(feels like ${convertFromFahrenheitToCelsius(weatherModel.main.feelsLike).toInt()})"
+                fontSize = 18.sp,
+                text = "(feels like ${convertFromFahrenheitToCelsius(weatherModel.main.feelsLike).toInt()})"
+            )
 
-        )
-
-
-            val painter = rememberImagePainter(data = weatherModel.weather[0].getImage())
             Image(
                 modifier = Modifier
-                    .height(60.dp)
-                    .width(60.dp)
+                    .height(50.dp)
+                    .width(50.dp)
                     .constrainAs(icon) {
                         end.linkTo(cityNameText.start)
                         start.linkTo(parent.start)
-                        bottom.linkTo(countryNameText.top)
+                        bottom.linkTo(cityNameText.bottom)
+                        top.linkTo(cityNameText.top)
                     },
                 painter = painter,
                 contentDescription = "icon"
             )
 
-
-
-
             Text(
                 modifier = Modifier
                     .constrainAs(conditionText) {
-                        top.linkTo(temperature.bottom)
+                        top.linkTo(icon.bottom)
                         start.linkTo(parent.start)
-                        end.linkTo(parent.end)
+                        end.linkTo(countryNameText.start)
                     },
-                fontSize = 20.sp,
-                text = capitalizeDesc(weatherModel.weather[0].description),
-                fontWeight = FontWeight.Bold
+                fontSize = 16.sp,
+                text = capitalizeDesc(weatherModel.weather[0].description)
             )
-            Image(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .constrainAs(sun) {
-                        top.linkTo(conditionText.bottom)
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                    }
-                    .height(20.dp)
-                    .width(20.dp),
+
+            Image(modifier = Modifier
+                .padding(8.dp)
+                .constrainAs(sun) {
+                    top.linkTo(conditionText.bottom)
+                    end.linkTo(temperature.start)
+                    start.linkTo(parent.start)
+                }
+                .height(20.dp)
+                .width(20.dp),
                 painter = painterResource(R.drawable.sun),
                 contentDescription = "sun",
                 contentScale = ContentScale.FillBounds
             )
-
 
             Text(
                 modifier = Modifier
@@ -245,16 +220,15 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 fontWeight = FontWeight.Bold
             )
 
-            Image(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .constrainAs(moon) {
-                        top.linkTo(sun.bottom)
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                    }
-                    .height(16.dp)
-                    .width(16.dp),
+            Image(modifier = Modifier
+                .padding(8.dp)
+                .constrainAs(moon) {
+                    top.linkTo(sun.bottom)
+                    end.linkTo(sun.end)
+                    start.linkTo(sun.start)
+                }
+                .height(16.dp)
+                .width(16.dp),
                 painter = painterResource(R.drawable.moon),
                 contentDescription = "moon",
                 contentScale = ContentScale.FillBounds
@@ -274,6 +248,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             )
         } else getEmptyData().cityName
     }
-
 }
+
 
