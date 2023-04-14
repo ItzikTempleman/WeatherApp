@@ -88,16 +88,18 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             mainViewModel = mainViewModel
         )
 
-        Text(
-            modifier = Modifier
-                .padding(
-                    top = 40.dp,
-                )
-                .constrainAs(cityNameText) {
-                    end.linkTo(parent.end)
-                    top.linkTo(searchET.bottom)
-                    start.linkTo(parent.start)
-                },
+
+        if (isSearched.value) {
+            Text(
+                modifier = Modifier
+                    .padding(
+                        top = 40.dp,
+                    )
+                    .constrainAs(cityNameText) {
+                        end.linkTo(parent.end)
+                        top.linkTo(searchET.bottom)
+                        start.linkTo(parent.start)
+                    },
             text = weatherModel.cityName,
             fontSize = 40.sp
         )
@@ -117,7 +119,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
 
 
-        if (isSearched.value) {
+
             Image(
                 modifier = Modifier
                     .padding(start = 24.dp)
@@ -131,20 +133,20 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 painter = painterResource(R.drawable.humidity),
                 contentDescription = "humidity"
             )
-        }
 
 
-        Text(
-            modifier = Modifier
-                .padding(start = 4.dp)
-                .constrainAs(humidityValue) {
-                    start.linkTo(humidityIcon.end)
-                    top.linkTo(countryNameText.top)
-                    bottom.linkTo(countryNameText.bottom)
-                },
-            fontSize = 20.sp,
-            text = if (isSearched.value) weatherModel.main.humidity.toString() + "%" else getEmptyData().cityName
-        )
+
+            Text(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .constrainAs(humidityValue) {
+                        start.linkTo(humidityIcon.end)
+                        top.linkTo(countryNameText.top)
+                        bottom.linkTo(countryNameText.bottom)
+                    },
+                fontSize = 20.sp,
+                text = weatherModel.main.humidity.toString() + "%"
+            )
 
 
 
@@ -156,8 +158,8 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     end.linkTo(parent.end)
                 },
             fontSize = 54.sp,
-            text = if (isSearched.value) convertFromFahrenheitToCelsius(weatherModel.main.temp).toInt()
-                .toString() else getEmptyData().cityName
+            text = convertFromFahrenheitToCelsius(weatherModel.main.temp).toInt()
+                .toString()
         )
         Text(
             modifier = Modifier
@@ -166,8 +168,8 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     start.linkTo(temperature.end)
                 },
             fontSize = 20.sp,
-            text = if (isSearched.value) "o"
-            else getEmptyData().cityName
+            text = "o"
+
         )
 
 
@@ -177,17 +179,14 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     top.linkTo(temperature.top)
                     start.linkTo(degrees.end)
                     bottom.linkTo(temperature.bottom)
-                }.padding(start = 4.dp),
+                }
+                .padding(start = 4.dp),
             fontSize = 18.sp,
-            text = if (isSearched.value) "(feels like ${convertFromFahrenheitToCelsius(weatherModel.main.feelsLike).toInt()})"
-            else getEmptyData().cityName
+            text = "(feels like ${convertFromFahrenheitToCelsius(weatherModel.main.feelsLike).toInt()})"
+
         )
 
 
-
-
-
-        if (isSearched.value) {
             val painter = rememberImagePainter(data = weatherModel.weather[0].getImage())
             Image(
                 modifier = Modifier
@@ -201,23 +200,21 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 painter = painter,
                 contentDescription = "icon"
             )
-        }
 
 
 
-        Text(
-            modifier = Modifier
-                .constrainAs(conditionText) {
-                    top.linkTo(temperature.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            fontSize = 20.sp,
-            text = if (isSearched.value) capitalizeDesc(weatherModel.weather[0].description)
-            else getEmptyData().cityName,
-            fontWeight = FontWeight.Bold
-        )
-        if (isSearched.value) {
+
+            Text(
+                modifier = Modifier
+                    .constrainAs(conditionText) {
+                        top.linkTo(temperature.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                fontSize = 20.sp,
+                text = capitalizeDesc(weatherModel.weather[0].description),
+                fontWeight = FontWeight.Bold
+            )
             Image(
                 modifier = Modifier
                     .padding(8.dp)
@@ -243,9 +240,8 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
                     },
                 fontSize = 16.sp,
-                text = if (isSearched.value) convertFromFahrenheitToCelsius(weatherModel.main.tempMax).toInt()
-                    .toString()
-                else getEmptyData().cityName,
+                text = convertFromFahrenheitToCelsius(weatherModel.main.tempMax).toInt()
+                    .toString(),
                 fontWeight = FontWeight.Bold
             )
 
@@ -272,12 +268,12 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                         start.linkTo(moon.end)
                     },
                 fontSize = 16.sp,
-                text = if (isSearched.value) {
-                    convertFromFahrenheitToCelsius(weatherModel.main.tempMin).toInt().toString()
-                } else getEmptyData().cityName,
+                text =
+                convertFromFahrenheitToCelsius(weatherModel.main.tempMin).toInt().toString(),
                 fontWeight = FontWeight.Bold
             )
-        }
+        } else getEmptyData().cityName
     }
+
 }
 
