@@ -3,23 +3,22 @@ package com.example.weatherapp.project.screens
 
 import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.main.getForecastEmptyData
@@ -32,7 +31,7 @@ var forecast = getForecastEmptyData()
 var forecastItems: List<ForecastItem> = getForecastEmptyData().hourlyList
 var isProgressBarVisible = mutableStateOf(false)
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
     val coroutineScope = rememberCoroutineScope()
@@ -46,9 +45,11 @@ fun HomeScreen(mainViewModel: MainViewModel) {
     )
 
     ConstraintLayout(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(12.dp)
     ) {
-        val (progressbar, searchET, cityNameText, countryNameText, humidityIcon, humidityValue, conditionText, temperature, feelsLike, degrees, icon, max, sun, min, moon) = createRefs()
+        val (progressbar, searchET, mainLayout, conditionLayout) = createRefs()
 
         GenerateProgressBar(
             modifier = Modifier
@@ -84,167 +85,30 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
 
         if (isSearched.value) {
-            val painter = rememberImagePainter(data = weatherModel.weather[0].getImage())
+            MainWeather(
+                weatherData = weatherModel, modifier = Modifier
+                    .constrainAs(mainLayout) {
 
-            Text(
-                modifier = Modifier
-                    .constrainAs(cityNameText) {
-                        end.linkTo(parent.end)
                         top.linkTo(searchET.bottom)
-                        start.linkTo(parent.start)
-                    },
-                text = weatherModel.cityName,
-                fontSize = 32.sp
+                    }
+                    .fillMaxWidth()
+//                    .background(colorResource(id = R.color.semi_transparent))
+//                    .height(150.dp)
+//                    .padding(12.dp)
             )
 
-            Text(
-                modifier = Modifier
-                    .constrainAs(countryNameText) {
-                        end.linkTo(parent.end)
-                        top.linkTo(cityNameText.bottom)
-                        start.linkTo(parent.start)
-                    },
-                text = getFullCountryName(weatherModel.moreInfo.country),
 
-                fontSize = 16.sp
-            )
+            ConditionAndHumidity(
+                weatherData = weatherModel, modifier = Modifier
+                    .constrainAs(conditionLayout) {
+                        top.linkTo(mainLayout.bottom)
 
-            Image(
-                modifier = Modifier
-                    .padding(start = 24.dp)
-                    .height(20.dp)
-                    .width(20.dp)
-                    .constrainAs(humidityIcon) {
-                        start.linkTo(countryNameText.end)
-                        top.linkTo(countryNameText.top)
-                        bottom.linkTo(countryNameText.bottom)
-                    },
-                painter = painterResource(R.drawable.humidity),
-                contentDescription = "humidity"
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(start = 4.dp)
-                    .constrainAs(humidityValue) {
-                        start.linkTo(humidityIcon.end)
-                        top.linkTo(countryNameText.top)
-                        bottom.linkTo(countryNameText.bottom)
-                    },
-                fontSize = 20.sp,
-                text = weatherModel.main.humidity.toString() + "%"
-            )
-
-            Text(
-                modifier = Modifier
-                    .constrainAs(temperature) {
-                        top.linkTo(countryNameText.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    },
-                fontSize = 54.sp,
-                text = convertFromFahrenheitToCelsius(weatherModel.main.temp).toInt()
-                    .toString()
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(degrees) {
-                        top.linkTo(temperature.top)
-                        start.linkTo(temperature.end)
-                    },
-                fontSize = 20.sp,
-                text = "o"
-            )
-
-            Text(modifier = Modifier
-                .constrainAs(feelsLike) {
-                    top.linkTo(temperature.top)
-                    start.linkTo(degrees.end)
-                    bottom.linkTo(temperature.bottom)
-                }
-                .padding(start = 4.dp),
-                fontSize = 18.sp,
-                text = "(feels like ${convertFromFahrenheitToCelsius(weatherModel.main.feelsLike).toInt()})"
-            )
-
-            Image(
-                modifier = Modifier
-                    .height(50.dp)
-                    .width(50.dp)
-                    .constrainAs(icon) {
-                        end.linkTo(cityNameText.start)
-                        start.linkTo(parent.start)
-                        bottom.linkTo(cityNameText.bottom)
-                        top.linkTo(cityNameText.top)
-                    },
-                painter = painter,
-                contentDescription = "icon"
-            )
-
-            Text(
-                modifier = Modifier
-                    .constrainAs(conditionText) {
-                        top.linkTo(icon.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(countryNameText.start)
-                    },
-                fontSize = 16.sp,
-                text = capitalizeDesc(weatherModel.weather[0].description)
-            )
-
-            Image(modifier = Modifier
-                .padding(8.dp)
-                .constrainAs(sun) {
-                    top.linkTo(conditionText.bottom)
-                    end.linkTo(temperature.start)
-                    start.linkTo(parent.start)
-                }
-                .height(20.dp)
-                .width(20.dp),
-                painter = painterResource(R.drawable.sun),
-                contentDescription = "sun",
-                contentScale = ContentScale.FillBounds
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .constrainAs(max) {
-                        top.linkTo(conditionText.bottom)
-                        start.linkTo(sun.end)
-
-                    },
-                fontSize = 16.sp,
-                text = convertFromFahrenheitToCelsius(weatherModel.main.tempMax).toInt()
-                    .toString(),
-                fontWeight = FontWeight.Bold
-            )
-
-            Image(modifier = Modifier
-                .padding(8.dp)
-                .constrainAs(moon) {
-                    top.linkTo(sun.bottom)
-                    end.linkTo(sun.end)
-                    start.linkTo(sun.start)
-                }
-                .height(16.dp)
-                .width(16.dp),
-                painter = painterResource(R.drawable.moon),
-                contentDescription = "moon",
-                contentScale = ContentScale.FillBounds
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .constrainAs(min) {
-                        top.linkTo(sun.bottom)
-                        start.linkTo(moon.end)
-                    },
-                fontSize = 16.sp,
-                text =
-                convertFromFahrenheitToCelsius(weatherModel.main.tempMin).toInt().toString(),
-                fontWeight = FontWeight.Bold
+                    }
+                    .fillMaxWidth()
+//                    .background(colorResource(id = R.color.semi_transparent))
+//                    .clip(shape = RoundedCornerShape(20.dp))
+//                    .height(150.dp)
+//                    .padding(horizontal = 4.dp, vertical = 12.dp)
             )
         } else getEmptyData().cityName
     }
