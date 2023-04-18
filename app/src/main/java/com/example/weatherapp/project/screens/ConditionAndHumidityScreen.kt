@@ -36,7 +36,7 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 )
                 .padding(6.dp)
         ) {
-            val (humidityIcon, humidityValue, conditionText, icon) = createRefs()
+            val (windLayout, humidityIcon, humidityValue, conditionText, icon) = createRefs()
 
             val painter = rememberImagePainter(data = weatherData.weather[0].getImage())
 
@@ -90,7 +90,12 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 fontSize = 20.sp,
                 text = weatherData.main.humidity.toString() + "%"
             )
-
+//            WindData(weatherData = weatherData, modifier = modifier.constrainAs(windLayout) {
+//                start.linkTo(parent.start)
+//                top.linkTo(parent.top)
+//                end.linkTo(conditionText.start)
+//                bottom.linkTo(parent.bottom)
+//            })
         }
     }
 }
