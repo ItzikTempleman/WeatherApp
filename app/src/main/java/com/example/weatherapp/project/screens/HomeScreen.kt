@@ -2,24 +2,16 @@ package com.example.weatherapp.project.screens
 
 
 import android.view.KeyEvent.KEYCODE_ENTER
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.weatherapp.R
 import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.main.getForecastEmptyData
 import com.example.weatherapp.project.models.forecast.ForecastItem
@@ -37,17 +29,9 @@ fun HomeScreen(mainViewModel: MainViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val (focusRequester) = FocusRequester.createRefs()
 
-    Image(
-        modifier = Modifier.fillMaxSize(),
-        painter = painterResource(R.drawable.wall),
-        contentDescription = "background_image",
-        contentScale = ContentScale.FillBounds
-    )
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .padding(12.dp)
     ) {
         val (progressbar, searchET, mainLayout, conditionLayout) = createRefs()
 
@@ -66,7 +50,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
         MainTextField(modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(6.dp)
             .constrainAs(searchET) {
                 start.linkTo(parent.start)
                 top.linkTo(parent.top)
@@ -88,7 +72,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             MainWeather(
                 weatherData = weatherModel, modifier = Modifier
                     .constrainAs(mainLayout) {
-
                         top.linkTo(searchET.bottom)
                     }
 
@@ -99,10 +82,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 weatherData = weatherModel, modifier = Modifier
                     .constrainAs(conditionLayout) {
                         top.linkTo(mainLayout.bottom)
-
                     }
-
-
             )
         } else getEmptyData().cityName
     }

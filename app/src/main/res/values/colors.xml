@@ -26,19 +26,21 @@
     <color name="lighter_grey_2">#6E6D6D</color>
     <color name="light_grey">#EAEAEA</color>
     <color name="almost_white">#F3F2F2</color>
-    <color name="strong_yellow">#FFA200</color>
+    <color name="strong_yellow">#FFCD00</color>
     <color name="light_red">#FF837A</color>
-    <color name="light_blue">#34b7f1</color>
-    <color name="light_yellow">#FDE499</color>
+    <color name="light_blue">#19c3fb</color>
+    <color name="light_yellow">#FBF4B4</color>
     <color name="light_green">#77CA7A</color>
     <color name="lighter_green"> #dcf8c6</color>
     <color name="tea_green">#DCF8C6</color>
     <color name="dark_blue_grey">#272A3C</color>
     <color name="purple">#64518A</color>
+
     <color name="button_purple">#553667</color>
     <color name="very_light__purple">#737BA6</color>
     <color name="dark_purple">#2c243d</color>
     <color name="turquoise">#30D5C8</color>
+    <color name="light_teal">#C0EBF6</color>
     <color name="toolbar_blue">#24b7f1</color>
     <color name="lighter_blue">#589FBF</color>
     <color name="off_white">#ECECEC</color>
@@ -46,5 +48,5 @@
     <color name="dark_blue">#213149</color>
     <color name="dark_red">#772F47</color>
     <color name="deep_red">#C10042</color>
-    <color name="very_light_blue">#C0DFED</color>
+    <color name="very_light_blue">#C9ECFA</color>
 </resources>

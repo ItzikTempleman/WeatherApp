@@ -27,15 +27,18 @@ fun MainWeather(weatherData: WeatherResponse, modifier: Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .padding(horizontal = 4.dp, vertical = 12.dp)
-            .clip(shape = RoundedCornerShape(20.dp))
-            .background(colorResource(id = R.color.semi_transparent))
-            .clip(shape = RoundedCornerShape(20.dp)),
-        elevation = 10.dp
+            .padding(6.dp)
+            .clip(shape = RoundedCornerShape(10.dp)),
+        elevation = 8.dp
     ) {
-        ConstraintLayout() {
-            val (cityNameText, countryNameText, temperature, feelsLike, degrees, max, sun, min, moon) = createRefs()
+        ConstraintLayout(
+            modifier = modifier
+                .background(
+                    colorResource(id = R.color.very_light_blue)
+                )
+                .padding(6.dp)
+        ) {
+            val (cityNameText, countryNameText, temperature,mainDegreesIcon, feelsLike, feelsLikeDegreesIcon, max, sun, min, moon) = createRefs()
 
             Text(
                 modifier = Modifier
@@ -50,28 +53,35 @@ fun MainWeather(weatherData: WeatherResponse, modifier: Modifier) {
 
             Text(
                 modifier = Modifier
+                    .padding(top = 6.dp, start = 8.dp)
                     .constrainAs(countryNameText) {
-                        end.linkTo(parent.end)
-                        top.linkTo(cityNameText.bottom)
-                        start.linkTo(parent.start)
+                        top.linkTo(cityNameText.top)
+                        bottom.linkTo(cityNameText.bottom)
+                        start.linkTo(cityNameText.end)
                     },
                 text = getFullCountryName(weatherData.moreInfo.country),
-
                 fontSize = 16.sp
             )
 
             Text(modifier = Modifier
                 .constrainAs(feelsLike) {
                     top.linkTo(temperature.top)
-                    start.linkTo(degrees.end)
+                    start.linkTo(countryNameText.start)
                     bottom.linkTo(temperature.bottom)
-                }
-                .padding(start = 4.dp),
-                fontSize = 18.sp,
-                text = "(feels like ${convertFromFahrenheitToCelsius(weatherData.main.feelsLike).toInt()})"
+                }.padding(top = 6.dp, start = 8.dp),
+                fontSize = 16.sp,
+                text = "feels like ${convertFromFahrenheitToCelsius(weatherData.main.feelsLike).toInt()}"
             )
 
-
+            Text(
+                modifier = Modifier
+                    .constrainAs(feelsLikeDegreesIcon) {
+                        top.linkTo(feelsLike.top)
+                        start.linkTo(feelsLike.end)
+                    }.padding(start = 1.dp, bottom =8.dp),
+                fontSize = 12.sp,
+                text = "o"
+            )
 
             Text(
                 modifier = Modifier
@@ -86,7 +96,7 @@ fun MainWeather(weatherData: WeatherResponse, modifier: Modifier) {
             )
             Text(
                 modifier = Modifier
-                    .constrainAs(degrees) {
+                    .constrainAs(mainDegreesIcon) {
                         top.linkTo(temperature.top)
                         start.linkTo(temperature.end)
                     },
@@ -96,14 +106,14 @@ fun MainWeather(weatherData: WeatherResponse, modifier: Modifier) {
 
 
             Image(modifier = Modifier
-                .padding(8.dp)
+
                 .constrainAs(sun) {
-                    top.linkTo(temperature.bottom)
-                    end.linkTo(parent.end)
+                    top.linkTo(temperature.top)
+                    end.linkTo(temperature.start)
                     start.linkTo(parent.start)
                 }
-                .height(20.dp)
-                .width(20.dp),
+                .height(28.dp)
+                .width(28.dp),
                 painter = painterResource(R.drawable.sun),
                 contentDescription = "sun",
                 contentScale = ContentScale.FillBounds
@@ -111,9 +121,9 @@ fun MainWeather(weatherData: WeatherResponse, modifier: Modifier) {
 
             Text(
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(6.dp)
                     .constrainAs(max) {
-                        top.linkTo(temperature.bottom)
+                        top.linkTo(temperature.top)
                         start.linkTo(sun.end)
 
                     },
@@ -124,14 +134,15 @@ fun MainWeather(weatherData: WeatherResponse, modifier: Modifier) {
             )
 
             Image(modifier = Modifier
-                .padding(8.dp)
+
                 .constrainAs(moon) {
                     top.linkTo(sun.bottom)
-                    end.linkTo(parent.end)
+                    end.linkTo(temperature.start)
                     start.linkTo(parent.start)
                 }
-                .height(16.dp)
-                .width(16.dp),
+                .padding(8.dp)
+                .height(20.dp)
+                .width(20.dp),
                 painter = painterResource(R.drawable.moon),
                 contentDescription = "moon",
                 contentScale = ContentScale.FillBounds
@@ -139,10 +150,10 @@ fun MainWeather(weatherData: WeatherResponse, modifier: Modifier) {
 
             Text(
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(6.dp)
                     .constrainAs(min) {
                         top.linkTo(sun.bottom)
-                        start.linkTo(moon.end)
+                        end.linkTo(max.end)
                     },
                 fontSize = 16.sp,
                 text = convertFromFahrenheitToCelsius(weatherData.main.tempMin).toInt().toString(),

@@ -25,14 +25,17 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .padding(horizontal = 4.dp, vertical = 12.dp)
-            .clip(shape = RoundedCornerShape(20.dp))
-            .background(colorResource(id = R.color.semi_transparent))
-            .clip(shape = RoundedCornerShape(20.dp)),
-        elevation = 10.dp
+            .padding(6.dp)
+            .clip(shape = RoundedCornerShape(10.dp)),
+        elevation = 8.dp
     ) {
-        ConstraintLayout() {
+        ConstraintLayout(
+            modifier = modifier
+                .background(
+                    colorResource(id = R.color.very_light_blue)
+                )
+                .padding(6.dp)
+        ) {
             val (humidityIcon, humidityValue, conditionText, icon) = createRefs()
 
             val painter = rememberImagePainter(data = weatherData.weather[0].getImage())
@@ -40,8 +43,8 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
 
             Image(
                 modifier = Modifier
-                    .height(50.dp)
-                    .width(50.dp)
+                    .height(80.dp)
+                    .width(80.dp)
                     .constrainAs(icon) {
                         end.linkTo(parent.end)
                         start.linkTo(parent.start)
