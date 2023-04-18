@@ -91,10 +91,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
                         top.linkTo(searchET.bottom)
                     }
-                    .fillMaxWidth()
-//                    .background(colorResource(id = R.color.semi_transparent))
-//                    .height(150.dp)
-//                    .padding(12.dp)
+
             )
 
 
@@ -104,11 +101,8 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                         top.linkTo(mainLayout.bottom)
 
                     }
-                    .fillMaxWidth()
-//                    .background(colorResource(id = R.color.semi_transparent))
-//                    .clip(shape = RoundedCornerShape(20.dp))
-//                    .height(150.dp)
-//                    .padding(horizontal = 4.dp, vertical = 12.dp)
+
+
             )
         } else getEmptyData().cityName
     }
