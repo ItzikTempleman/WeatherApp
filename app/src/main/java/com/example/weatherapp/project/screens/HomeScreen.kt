@@ -33,7 +33,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (progressbar, searchET, mainLayout, conditionLayout) = createRefs()
+        val (progressbar, searchET, mainLayout, conditionLayout, windLayout) = createRefs()
 
         GenerateProgressBar(
             modifier = Modifier
@@ -83,6 +83,16 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     .constrainAs(conditionLayout) {
                         top.linkTo(mainLayout.bottom)
                     }
+                    .height(150.dp)
+            )
+
+            WindData(
+                weatherData = weatherModel,
+                modifier = Modifier
+                    .constrainAs(windLayout) {
+                        top.linkTo(mainLayout.bottom)
+                    }
+                    .height(150.dp)
             )
         } else getEmptyData().cityName
     }

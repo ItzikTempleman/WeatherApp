@@ -90,12 +90,7 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 fontSize = 20.sp,
                 text = weatherData.main.humidity.toString() + "%"
             )
-//            WindData(weatherData = weatherData, modifier = modifier.constrainAs(windLayout) {
-//                start.linkTo(parent.start)
-//                top.linkTo(parent.top)
-//                end.linkTo(conditionText.start)
-//                bottom.linkTo(parent.bottom)
-//            })
+
         }
     }
 }
