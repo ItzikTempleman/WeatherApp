@@ -2,20 +2,25 @@ package com.example.weatherapp.project.screens
 
 
 import android.view.KeyEvent.KEYCODE_ENTER
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.weatherapp.R
 import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.main.getForecastEmptyData
 import com.example.weatherapp.project.models.forecast.ForecastItem
 import com.example.weatherapp.project.viewmodels.MainViewModel
+
 
 var isSearched = mutableStateOf(false)
 var weatherModel = getEmptyData()
@@ -33,7 +38,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (progressbar, searchET, mainLayout, conditionLayout, windLayout) = createRefs()
+        val (progressbar, searchET, location, mainLayout, conditionLayout) = createRefs()
 
         GenerateProgressBar(
             modifier = Modifier
@@ -49,14 +54,13 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         )
 
         MainTextField(modifier = Modifier
-            .fillMaxWidth()
             .padding(6.dp)
+            .width(360.dp)
             .constrainAs(searchET) {
                 start.linkTo(parent.start)
                 top.linkTo(parent.top)
-                end.linkTo(parent.end)
+                end.linkTo(location.start)
             }
-
             .onKeyEvent {
                 if (it.nativeKeyEvent.keyCode == KEYCODE_ENTER) {
                     focusRequester.requestFocus()
@@ -67,8 +71,25 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             mainViewModel = mainViewModel
         )
 
+        Image(
+            modifier = Modifier
+                .clickable {
+                    getLocation()
+                }
+                .clip(shape = RoundedCornerShape(10.dp))
+                .constrainAs(location) {
+                    top.linkTo(searchET.top)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(searchET.bottom)
+                }
+                .size(45.dp)
+                .padding(12.dp),
+            painter = painterResource(R.drawable.gps_location),
+            contentDescription = "location"
+        )
 
         if (isSearched.value) {
+
             MainWeather(
                 weatherData = weatherModel, modifier = Modifier
                     .constrainAs(mainLayout) {
@@ -85,17 +106,15 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     }
                     .height(150.dp)
             )
-
-            WindData(
-                weatherData = weatherModel,
-                modifier = Modifier
-                    .constrainAs(windLayout) {
-                        top.linkTo(mainLayout.bottom)
-                    }
-                    .height(150.dp)
-            )
         } else getEmptyData().cityName
     }
 }
+
+
+fun getLocation() {
+
+}
+
+
 
 

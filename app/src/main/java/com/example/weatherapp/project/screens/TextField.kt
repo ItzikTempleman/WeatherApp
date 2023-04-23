@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 fun MainTextField(
     modifier: Modifier,
     coroutineScope: CoroutineScope,
-    mainViewModel: MainViewModel,
+    mainViewModel: MainViewModel
 ) {
 
     var newChar by remember { mutableStateOf("") }

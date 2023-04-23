@@ -159,6 +159,7 @@ fun MainWeather(weatherData: WeatherResponse, modifier: Modifier) {
                 text = convertFromFahrenheitToCelsius(weatherData.main.tempMin).toInt().toString(),
                 fontWeight = FontWeight.Bold
             )
+
         }
     }
 }

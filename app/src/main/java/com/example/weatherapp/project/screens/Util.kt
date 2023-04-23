@@ -5,6 +5,8 @@ import java.util.*
 
 fun convertFromFahrenheitToCelsius(fahrenheit: Double): Double = ((fahrenheit - 32) * 5 / 9)
 
+fun convertFromMilesToKm(mph:Double):Double =mph*1.6
+
 
 fun capitalizeDesc(description: String): String {
     return description.substring(0, 1)
