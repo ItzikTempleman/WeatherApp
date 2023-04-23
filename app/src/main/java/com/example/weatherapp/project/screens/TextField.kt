@@ -60,14 +60,13 @@ fun MainTextField(
             onDone = {
                 isProgressBarVisible.value = true
                 coroutineScope.launch {
-                    mainViewModel.getWeatherResponse(newChar).collect {
-                        weatherModel = it
-                        newChar = ""
+                    mainViewModel.getWeatherResponse(newChar).collect { weatherIt ->
+                        weatherModel = weatherIt
                         isSearched.value = true
+                        newChar = ""
                     }
                 }
             }
         )
     )
-
 }

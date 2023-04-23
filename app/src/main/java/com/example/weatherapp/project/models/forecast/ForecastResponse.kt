@@ -9,5 +9,5 @@ import kotlinx.parcelize.Parcelize
 data class ForecastResponse(
     @SerializedName("list")
     val hourlyList :List<ForecastItem>,
-    val coord:CoordinatesInForecast
+    val city: City
 ): Parcelable, BaseModel()

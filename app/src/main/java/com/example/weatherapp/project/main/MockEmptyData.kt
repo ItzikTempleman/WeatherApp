@@ -1,6 +1,7 @@
 package com.example.weatherapp.project.main
 
 import com.example.weatherapp.project.models.current_weather.*
+import com.example.weatherapp.project.models.forecast.City
 import com.example.weatherapp.project.models.forecast.CoordinatesInForecast
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 
@@ -40,8 +41,10 @@ fun getEmptyData(): WeatherResponse {
 fun getForecastEmptyData(): ForecastResponse {
     return ForecastResponse(
         hourlyList = emptyList(),
-        coord = CoordinatesInForecast(
-            0.0, 0.0
+        city = City(
+            coord = CoordinatesInForecast(
+                0.0, 0.0
+            )
         )
     )
 }

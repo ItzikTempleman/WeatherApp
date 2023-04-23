@@ -1,6 +1,7 @@
 package com.example.weatherapp.project.screens
 
 
+import android.annotation.SuppressLint
 import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,14 +21,15 @@ import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.main.getForecastEmptyData
 import com.example.weatherapp.project.models.forecast.ForecastItem
 import com.example.weatherapp.project.viewmodels.MainViewModel
+import kotlinx.coroutines.launch
 
 
 var isSearched = mutableStateOf(false)
 var weatherModel = getEmptyData()
-var forecast = getForecastEmptyData()
-var forecastItems: List<ForecastItem> = getForecastEmptyData().hourlyList
+var forecastModel = getForecastEmptyData()
 var isProgressBarVisible = mutableStateOf(false)
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
@@ -38,7 +40,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (progressbar, searchET, location, mainLayout, conditionLayout) = createRefs()
+        val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
 
         GenerateProgressBar(
             modifier = Modifier
@@ -90,6 +92,16 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
         if (isSearched.value) {
 
+            coroutineScope.launch {
+                mainViewModel.getForecastResponse(
+                    weatherModel.coordinates.lat,
+                    weatherModel.coordinates.lon
+                ).collect { forecastIt ->
+                    forecastModel = forecastIt
+                }
+            }
+
+
             MainWeather(
                 weatherData = weatherModel, modifier = Modifier
                     .constrainAs(mainLayout) {
@@ -98,13 +110,21 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
             )
 
-
             ConditionAndHumidity(
                 weatherData = weatherModel, modifier = Modifier
                     .constrainAs(conditionLayout) {
                         top.linkTo(mainLayout.bottom)
                     }
                     .height(150.dp)
+            )
+
+            //* TODO problem is with request!! */
+            ForecastLayout(
+                forecastData = forecastModel, modifier = Modifier
+                    .constrainAs(forecastLayout) {
+                        top.linkTo(conditionLayout.bottom)
+                    }
+                    .height(200.dp)
             )
         } else getEmptyData().cityName
     }
