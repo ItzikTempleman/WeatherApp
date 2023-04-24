@@ -1,15 +1,10 @@
 package com.example.weatherapp.project.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,16 +17,10 @@ import com.example.weatherapp.project.models.current_weather.WeatherResponse
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(6.dp)
-            .clip(shape = RoundedCornerShape(10.dp)),
-        elevation = 8.dp
-    ) {
+
         ConstraintLayout(
             modifier = modifier
-
+                .fillMaxWidth()
                 .padding(6.dp)
         ) {
             val ( humidityIcon, humidityValue, conditionText, icon,windSpeed, windSpeedValue) = createRefs()
@@ -39,64 +28,20 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
             val painter = rememberImagePainter(data = weatherData.weather[0].getImage())
 
 
-            Image(
-                modifier = Modifier
-                    .height(80.dp)
-                    .width(80.dp)
-                    .constrainAs(icon) {
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                        bottom.linkTo(parent.bottom)
-                        top.linkTo(parent.top)
-                    },
-                painter = painter,
-                contentDescription = "icon"
-            )
-            Text(
-                modifier = Modifier
-                    .constrainAs(conditionText) {
-                        top.linkTo(icon.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    },
-                fontSize = 16.sp,
-                text = capitalizeDesc(weatherData.weather[0].description)
-            )
+
+
 
             Image(
-                modifier = Modifier
-                    .padding(start = 24.dp)
-                    .height(20.dp)
-                    .width(20.dp)
-                    .constrainAs(humidityIcon) {
-                        start.linkTo(icon.end)
-                        top.linkTo(icon.top)
-                        bottom.linkTo(icon.bottom)
-                    },
-                painter = painterResource(R.drawable.humidity),
-                contentDescription = "humidity"
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(start = 4.dp)
-                    .constrainAs(humidityValue) {
-                        start.linkTo(humidityIcon.end)
-                        top.linkTo(icon.top)
-                        bottom.linkTo(icon.bottom)
-                    },
-                fontSize = 20.sp,
-                text = weatherData.main.humidity.toString() + "%"
-            )
-            Text(
                 modifier = Modifier
                     .constrainAs(windSpeed) {
                         top.linkTo(parent.top)
                         end.linkTo(icon.start)
                         start.linkTo(parent.start)
-                    },
-                fontSize = 16.sp,
-                text = "Wind speed"
+                    }
+                    .height(80.dp)
+                    .width(80.dp),
+                painter = painterResource(R.drawable.wind),
+                contentDescription = "wind"
             )
             Text(
                 modifier = Modifier
@@ -105,12 +50,59 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                         end.linkTo(icon.start)
                         start.linkTo(parent.start)
                     },
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 text = convertFromMilesToKm(weatherData.wind.speed).toInt().toString() + " km/h"
+            )
+
+
+            Image(
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(100.dp)
+                    .constrainAs(icon) {
+                        end.linkTo(parent.end)
+                        start.linkTo(parent.start)
+                        top.linkTo(windSpeed.top)
+                    },
+                painter = painter,
+                contentDescription = "icon"
+            )
+            Text(
+                modifier = Modifier
+                    .constrainAs(conditionText) {
+                        top.linkTo(windSpeed.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                fontSize = 16.sp,
+                text = capitalizeDesc(weatherData.weather[0].description)
+            )
+            Image(
+                modifier = Modifier.padding(top = 20.dp)
+                    .height(60.dp)
+                    .width(60.dp)
+                    .constrainAs(humidityIcon) {
+                        start.linkTo(icon.end)
+                        end.linkTo(parent.end)
+                        top.linkTo(windSpeed.top)
+                    },
+                painter = painterResource(R.drawable.humidity),
+                contentDescription = "humidity"
+            )
+
+            Text(
+                modifier = Modifier
+                    .constrainAs(humidityValue) {
+                        start.linkTo(icon.end)
+                        end.linkTo(parent.end)
+                        top.linkTo(windSpeed.bottom)
+                    },
+                fontSize = 16.sp,
+                text = weatherData.main.humidity.toString() + "%"
             )
         }
     }
-}
+
 
 
 

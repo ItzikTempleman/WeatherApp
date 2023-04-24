@@ -100,8 +100,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
         if (isSearched.value) {
 
-
-
             MainWeather(
                 weatherData = weatherModel, modifier = Modifier
                     .constrainAs(mainLayout) {
