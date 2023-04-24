@@ -2,19 +2,25 @@ package com.example.weatherapp.project.screens
 
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.SnackbarDefaults.backgroundColor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -22,7 +28,6 @@ import com.example.weatherapp.R
 import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.main.getForecastEmptyData
 import com.example.weatherapp.project.viewmodels.MainViewModel
-import kotlinx.coroutines.launch
 
 
 var isSearched = mutableStateOf(false)
@@ -31,18 +36,12 @@ var forecastModel = getForecastEmptyData()
 var isProgressBarVisible = mutableStateOf(false)
 
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val (focusRequester) = FocusRequester.createRefs()
-
-    Image(
-        modifier = Modifier.fillMaxSize(),
-        painter = painterResource(id = R.drawable.wall),
-        contentDescription = "background",
-        contentScale = ContentScale.FillBounds
-    )
+    
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -65,11 +64,9 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
         MainTextField(modifier = Modifier
             .padding(6.dp)
-            .width(360.dp)
+            .fillMaxWidth()
             .constrainAs(searchET) {
-                start.linkTo(parent.start)
                 top.linkTo(parent.top)
-                end.linkTo(location.start)
             }
             .onKeyEvent {
                 if (it.nativeKeyEvent.keyCode == KEYCODE_ENTER) {
@@ -80,23 +77,32 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             coroutineScope = coroutineScope,
             mainViewModel = mainViewModel
         )
+        
 
-        Image(
+        Surface(
             modifier = Modifier
-                .clickable {
-                    getLocation()
-                }
-                .clip(shape = RoundedCornerShape(10.dp))
                 .constrainAs(location) {
-                    top.linkTo(searchET.top)
                     end.linkTo(parent.end)
-                    bottom.linkTo(searchET.bottom)
-                }
-                .size(45.dp)
-                .padding(12.dp),
-            painter = painterResource(R.drawable.gps_location),
-            contentDescription = "location"
-        )
+                    bottom.linkTo(parent.bottom)
+                }.size(70.dp)
+                .padding(8.dp),
+            shape = CircleShape,
+            elevation = 20.dp
+        ) {
+            FloatingActionButton(
+                backgroundColor = colorResource(id = R.color.white),
+                modifier = Modifier,
+                onClick = {
+                    getLocation()
+                },
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.gps_location),
+                    contentDescription = "location",
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+        }
 
         if (isSearched.value) {
 
