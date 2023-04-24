@@ -25,7 +25,8 @@
     <color name="lighter_grey">#A8A7A7</color>
     <color name="lighter_grey_2">#6E6D6D</color>
     <color name="light_grey">#EAEAEA</color>
-    <color name="almost_white">#F3F2F2</color>
+
+    <color name="almost_white">#F4F4F4</color>
     <color name="strong_yellow">#FFCD00</color>
     <color name="light_red">#FF837A</color>
     <color name="light_blue">#19c3fb</color>
