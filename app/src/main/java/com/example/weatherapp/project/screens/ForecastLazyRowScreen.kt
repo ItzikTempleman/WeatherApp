@@ -42,7 +42,7 @@ fun ForecastLayout(forecast: ForecastItem, modifier: Modifier) {
         modifier = modifier
             .width(150.dp)
     ) {
-        Text(text =forecast.main.temp.toInt().toString())
+        Text(text = convertFromKelvinToCelsius(forecast.main.temp).toInt().toString())
     }
 }
 
