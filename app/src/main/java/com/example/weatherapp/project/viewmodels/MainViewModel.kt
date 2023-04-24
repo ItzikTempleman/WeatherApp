@@ -35,16 +35,18 @@ class MainViewModel
     }
 
     fun getForecastResponse(lat: Double, lon: Double): Flow<ForecastResponse> {
-        val forecastFlow = flow {
+        val forecastFlow: Flow<ForecastResponse> = flow {
             val forecastResponse = repository.getForecast(lat, lon)
             if (forecastResponse.isSuccessful) {
                 val forecastResponseBody = forecastResponse.body()
                 if (forecastResponseBody != null) {
+                   Log.d("TG", "response: ${forecastResponseBody.city}")
                     emit(forecastResponseBody)
-                } else Log.d("TAG", "first forecast failure message: " + forecastResponse.message())
+                } else Log.d(
+                    "TAG", "second forecast failure message: " + forecastResponse.message()
+                )
                 return@flow
-
-            } else Log.d("TAG", "second forecast failure message: " + forecastResponse.message())
+            } else Log.d("TAG", "first forecast failure message: " + forecastResponse.message())
             return@flow
         }
         return forecastFlow

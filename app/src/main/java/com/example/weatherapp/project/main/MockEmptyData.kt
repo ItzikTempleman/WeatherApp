@@ -38,13 +38,8 @@ fun getEmptyData(): WeatherResponse {
     )
 }
 
-fun getForecastEmptyData(): ForecastResponse {
-    return ForecastResponse(
-        hourlyList = emptyList(),
-        city = City(
-            coord = CoordinatesInForecast(
-                0.0, 0.0
-            )
-        )
-    )
-}
+fun getForecastEmptyData(): ForecastResponse = ForecastResponse(
+    hourlyList = emptyList(), city = City(coord = CoordinatesInForecast(0.0, 0.0))
+)
+
+

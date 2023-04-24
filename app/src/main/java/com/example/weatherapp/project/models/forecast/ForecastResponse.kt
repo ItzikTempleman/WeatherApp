@@ -10,4 +10,4 @@ data class ForecastResponse(
     @SerializedName("list")
     val hourlyList :List<ForecastItem>,
     val city: City
-): Parcelable, BaseModel()
+): Parcelable

@@ -14,7 +14,7 @@ interface Requests {
     ): Response<WeatherResponse>
 
 
-    @GET("city/fivedaysforcast/{lat},{lon}")
+    @GET("city/fivedaysforcast/{lat}/{lon}")
     suspend fun getForecastData(
         @Path("lat") latitude: Double,
         @Path("lon") longitude: Double

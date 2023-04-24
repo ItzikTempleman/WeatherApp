@@ -31,9 +31,7 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
     ) {
         ConstraintLayout(
             modifier = modifier
-                .background(
-                    colorResource(id = R.color.very_light_blue)
-                )
+
                 .padding(6.dp)
         ) {
             val ( humidityIcon, humidityValue, conditionText, icon,windSpeed, windSpeedValue) = createRefs()

@@ -1,6 +1,7 @@
 package com.example.weatherapp.project.screens
 
 
+import android.util.Log
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -62,8 +63,12 @@ fun MainTextField(
                 coroutineScope.launch {
                     mainViewModel.getWeatherResponse(newChar).collect { weatherIt ->
                         weatherModel = weatherIt
-                        isSearched.value = true
-                        newChar = ""
+                        mainViewModel.getForecastResponse(weatherIt.coordinates.lat, weatherIt.coordinates.lon).collect { forecastIt ->
+                            forecastModel = forecastIt
+                            Log.d("TAG", "forecastModel: $forecastModel")
+                            isSearched.value = true
+                            newChar = ""
+                        }
                     }
                 }
             }

@@ -5,6 +5,9 @@ import java.util.*
 
 fun convertFromFahrenheitToCelsius(fahrenheit: Double): Double = ((fahrenheit - 32) * 5 / 9)
 
+
+fun convertFromKelvinToCelsius(kelvin: Double): Double = kelvin - 273.15
+
 fun convertFromMilesToKm(mph:Double):Double =mph*1.6
 
 

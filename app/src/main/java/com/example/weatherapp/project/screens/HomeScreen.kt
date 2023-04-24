@@ -2,6 +2,7 @@ package com.example.weatherapp.project.screens
 
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -13,13 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.getEmptyData
 import com.example.weatherapp.project.main.getForecastEmptyData
-import com.example.weatherapp.project.models.forecast.ForecastItem
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -36,9 +37,16 @@ fun HomeScreen(mainViewModel: MainViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val (focusRequester) = FocusRequester.createRefs()
 
+    Image(
+        modifier = Modifier.fillMaxSize(),
+        painter = painterResource(id = R.drawable.wall),
+        contentDescription = "background",
+        contentScale = ContentScale.FillBounds
+    )
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
+
     ) {
         val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
 
@@ -92,14 +100,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
         if (isSearched.value) {
 
-            coroutineScope.launch {
-                mainViewModel.getForecastResponse(
-                    weatherModel.coordinates.lat,
-                    weatherModel.coordinates.lon
-                ).collect { forecastIt ->
-                    forecastModel = forecastIt
-                }
-            }
 
 
             MainWeather(
@@ -118,13 +118,12 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     .height(150.dp)
             )
 
-            //* TODO problem is with request!! */
             ForecastLayout(
                 forecastData = forecastModel, modifier = Modifier
                     .constrainAs(forecastLayout) {
                         top.linkTo(conditionLayout.bottom)
                     }
-                    .height(200.dp)
+                    .height(150.dp)
             )
         } else getEmptyData().cityName
     }
