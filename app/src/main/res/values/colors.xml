@@ -26,7 +26,7 @@
     <color name="lighter_grey_2">#6E6D6D</color>
     <color name="light_grey">#EAEAEA</color>
 
-    <color name="almost_white">#F4F4F4</color>
+    <color name="almost_white">#EFEFEF</color>
     <color name="strong_yellow">#FFCD00</color>
     <color name="light_red">#FF837A</color>
     <color name="light_blue">#19c3fb</color>
@@ -35,7 +35,7 @@
     <color name="lighter_green"> #dcf8c6</color>
     <color name="tea_green">#DCF8C6</color>
     <color name="dark_blue_grey">#272A3C</color>
-    <color name="purple">#64518A</color>
+    <color name="purple">#C3B0E7</color>
 
     <color name="button_purple">#553667</color>
     <color name="very_light__purple">#EDE6FB</color>

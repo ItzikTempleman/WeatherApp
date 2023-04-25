@@ -1,19 +1,17 @@
-package com.example.weatherapp.project.screens
+package com.example.weatherapp.project.view
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.dp
 import com.example.weatherapp.R
+import com.example.weatherapp.project.view.screens.isProgressBarVisible
 
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun GenerateProgressBar(modifier: Modifier,isVisible:Boolean) {
+fun ProgressBar(modifier: Modifier, isVisible:Boolean) {
     if(isVisible)
     CircularProgressIndicator(
         modifier = modifier,
@@ -21,6 +19,6 @@ fun GenerateProgressBar(modifier: Modifier,isVisible:Boolean) {
     )
 }
 
-fun stopProgressBar() {
-    isProgressBarVisible.value = false
+fun toggleProgressBar(isVisible: Boolean = false) {
+    isProgressBarVisible.value = isVisible
 }

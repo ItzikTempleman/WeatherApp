@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.screens
+package com.example.weatherapp.project.view.layouts
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -12,20 +12,23 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.weatherapp.R
-import com.example.weatherapp.project.models.current_weather.WeatherResponse
+import com.example.weatherapp.project.models.weather.WeatherResponse
+import com.example.weatherapp.project.view.capitalizeDesc
+import com.example.weatherapp.project.view.convertFromMilesToKm
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
+fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
 
         ConstraintLayout(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(6.dp)
         ) {
-            val ( humidityIcon, humidityValue, conditionText, icon,windSpeed, windSpeedValue) = createRefs()
+            val ( humidityIcon, humidityValue, conditionIcon,conditionText,windSpeedIcon, windSpeedValue) = createRefs()
 
-            val painter = rememberImagePainter(data = weatherData.weather[0].getImage())
+            val firstWeatherOrNull = weatherData.weather.firstOrNull()
+            val painter = rememberImagePainter(data = firstWeatherOrNull?.getImage())
 
 
 
@@ -33,21 +36,21 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
 
             Image(
                 modifier = Modifier
-                    .constrainAs(windSpeed) {
+                    .constrainAs(windSpeedIcon) {
                         top.linkTo(parent.top)
-                        end.linkTo(icon.start)
+                        end.linkTo(conditionIcon.start)
                         start.linkTo(parent.start)
                     }
-                    .height(80.dp)
-                    .width(80.dp),
+                    .height(50.dp)
+                    .width(50.dp),
                 painter = painterResource(R.drawable.wind),
-                contentDescription = "wind"
+                contentDescription = "wind_icon"
             )
             Text(
                 modifier = Modifier
                     .constrainAs(windSpeedValue) {
-                        top.linkTo(windSpeed.bottom)
-                        end.linkTo(icon.start)
+                        top.linkTo(windSpeedIcon.bottom)
+                        end.linkTo(conditionIcon.start)
                         start.linkTo(parent.start)
                     },
                 fontSize = 16.sp,
@@ -57,20 +60,22 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
 
             Image(
                 modifier = Modifier
-                    .height(100.dp)
-                    .width(100.dp)
-                    .constrainAs(icon) {
+                    .height(70.dp)
+                    .width(70.dp)
+                    .constrainAs(conditionIcon) {
                         end.linkTo(parent.end)
                         start.linkTo(parent.start)
-                        top.linkTo(windSpeed.top)
+                        top.linkTo(windSpeedIcon.top)
+                        bottom.linkTo(windSpeedIcon.bottom)
                     },
                 painter = painter,
-                contentDescription = "icon"
+                contentDescription = "condition_icon"
             )
             Text(
                 modifier = Modifier
                     .constrainAs(conditionText) {
-                        top.linkTo(windSpeed.bottom)
+                        top.linkTo(windSpeedValue.top)
+                        bottom.linkTo(windSpeedValue.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
@@ -78,27 +83,29 @@ fun ConditionAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 text = capitalizeDesc(weatherData.weather[0].description)
             )
             Image(
-                modifier = Modifier.padding(top = 20.dp)
-                    .height(60.dp)
-                    .width(60.dp)
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(50.dp)
                     .constrainAs(humidityIcon) {
-                        start.linkTo(icon.end)
+                        start.linkTo(conditionIcon.end)
                         end.linkTo(parent.end)
-                        top.linkTo(windSpeed.top)
+                        top.linkTo(windSpeedIcon.top)
+                        bottom.linkTo(windSpeedIcon.bottom)
                     },
-                painter = painterResource(R.drawable.humidity),
-                contentDescription = "humidity"
+                painter = painterResource(R.drawable.humidity_level),
+                contentDescription = "humidity_icon"
             )
 
             Text(
                 modifier = Modifier
                     .constrainAs(humidityValue) {
-                        start.linkTo(icon.end)
+                        start.linkTo(conditionIcon.end)
                         end.linkTo(parent.end)
-                        top.linkTo(windSpeed.bottom)
+                        top.linkTo(windSpeedValue.top)
+                        bottom.linkTo(windSpeedValue.bottom)
                     },
                 fontSize = 16.sp,
-                text = weatherData.main.humidity.toString() + "%"
+                text = weatherData.main.humidity.toString()
             )
         }
     }

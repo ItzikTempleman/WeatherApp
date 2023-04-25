@@ -1,5 +1,7 @@
-package com.example.weatherapp.project.screens
+package com.example.weatherapp.project.view
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.util.*
 
 
@@ -26,6 +28,13 @@ fun getFullCountryName(alpha2CodeName: String): String {
     return countryFullName
 }
 
+fun <T> Flow<T>.handleErrors(): Flow<T> = flow {
+    try {
+        collect { value -> emit(value) }
+    } catch (e: Throwable) {
+        toggleProgressBar(false)
+    }
+}
 
 
 

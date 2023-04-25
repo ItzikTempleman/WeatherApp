@@ -3,10 +3,10 @@ package com.example.weatherapp.project.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.weatherapp.project.models.current_weather.WeatherResponse
+import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.repositories.Repository
-import com.example.weatherapp.project.screens.stopProgressBar
+import com.example.weatherapp.project.view.toggleProgressBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -23,12 +23,11 @@ class MainViewModel
                 val responseBody = response.body()
                 if (responseBody != null) {
                     emit(responseBody)
-                    stopProgressBar()
-                } else Log.d("TAG", "first failure message: " + response.message())
-                stopProgressBar()
+                    toggleProgressBar()                } else Log.d("TAG", "first failure message: " + response.message())
+                toggleProgressBar()
                 return@flow
             } else Log.d("TAG", "second failure message: " + response.message())
-            stopProgressBar()
+            toggleProgressBar()
             return@flow
         }
         return weatherListFlow

@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.screens
+package com.example.weatherapp.project.view.composables
 
 
 import android.util.Log
@@ -18,13 +18,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.weatherapp.R
+import com.example.weatherapp.project.view.handleErrors
+import com.example.weatherapp.project.view.screens.forecastModel
+import com.example.weatherapp.project.view.screens.isSearched
+import com.example.weatherapp.project.view.screens.weatherModel
+import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainTextField(
+fun SearchTextField(
     modifier: Modifier,
     coroutineScope: CoroutineScope,
     mainViewModel: MainViewModel
@@ -65,9 +70,9 @@ fun MainTextField(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    isProgressBarVisible.value = true
+                    toggleProgressBar(true)
                     coroutineScope.launch {
-                        mainViewModel.getWeatherResponse(newChar).collect { weatherIt ->
+                        mainViewModel.getWeatherResponse(newChar).handleErrors().collect { weatherIt ->
                             weatherModel = weatherIt
                             mainViewModel.getForecastResponse(
                                 weatherIt.coordinates.lat,

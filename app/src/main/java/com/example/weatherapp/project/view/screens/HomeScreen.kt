@@ -1,61 +1,63 @@
-package com.example.weatherapp.project.screens
+package com.example.weatherapp.project.view.screens
 
 
-import android.annotation.SuppressLint
-import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
-import com.example.weatherapp.project.main.getEmptyData
-import com.example.weatherapp.project.main.getForecastEmptyData
+import com.example.weatherapp.project.models.forecast.ForecastResponse
+import com.example.weatherapp.project.models.weather.WeatherResponse
+import com.example.weatherapp.project.view.layouts.WindAndHumidity
+import com.example.weatherapp.project.view.ForecastLayout
+import com.example.weatherapp.project.view.ProgressBar
+import com.example.weatherapp.project.view.composables.SearchTextField
+import com.example.weatherapp.project.view.layouts.BasicWeatherData
 import com.example.weatherapp.project.viewmodels.MainViewModel
 
-
+// TODO: Check if that's the right way
 var isSearched = mutableStateOf(false)
-var weatherModel = getEmptyData()
-var forecastModel = getForecastEmptyData()
+var weatherModel = WeatherResponse.getMockObj()
+var forecastModel = ForecastResponse.getForecastMockObj()
 var isProgressBarVisible = mutableStateOf(false)
 
-@SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
     val coroutineScope = rememberCoroutineScope()
-    val (focusRequester) = FocusRequester.createRefs()
 
     ConstraintLayout(
         modifier = Modifier
-            .background(colorResource(id = R.color.almost_white))
             .fillMaxSize()
-
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        colorResource(id = R.color.light_teal),
+                        colorResource(id = R.color.white),
+                    )
+                )
+            )
     ) {
         val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
 
 
-        MainTextField(modifier = Modifier
-            .padding(6.dp)
-            .fillMaxWidth()
-            .constrainAs(searchET) {
-                top.linkTo(parent.top)
-            }
-            .onKeyEvent {
-                if (it.nativeKeyEvent.keyCode == KEYCODE_ENTER) {
-                    focusRequester.requestFocus()
-                }
-                false
-            },
+        SearchTextField(
+            modifier = Modifier
+                .padding(6.dp)
+                .fillMaxWidth()
+                .constrainAs(searchET) {
+                    top.linkTo(parent.top)
+                },
             coroutineScope = coroutineScope,
             mainViewModel = mainViewModel
         )
@@ -63,15 +65,16 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
         if (isSearched.value) {
 
-            MainWeather(
-                weatherData = weatherModel, modifier = Modifier
+            BasicWeatherData(
+                weatherModel = weatherModel, modifier = Modifier
                     .constrainAs(mainLayout) {
                         top.linkTo(searchET.bottom)
                     }
+                    .padding(top = 80.dp)
 
             )
 
-            ConditionAndHumidity(
+            WindAndHumidity(
                 weatherData = weatherModel, modifier = Modifier
                     .constrainAs(conditionLayout) {
                         top.linkTo(mainLayout.bottom)
@@ -82,22 +85,21 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             ForecastLayout(
                 forecastData = forecastModel, modifier = Modifier
                     .constrainAs(forecastLayout) {
-                        top.linkTo(conditionLayout.bottom)
+                        bottom.linkTo(parent.bottom)
                     }
-                    .height(150.dp)
+                    .height(200.dp)
             )
-        } else {
-            getEmptyData().cityName
         }
 
+        // Location Button
         Surface(
             modifier = Modifier
                 .constrainAs(location) {
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
                 }
-                .size(70.dp)
-                .padding(8.dp),
+                .size(80.dp)
+                .padding(16.dp),
             shape = CircleShape,
             elevation = 20.dp
         ) {
@@ -105,17 +107,18 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 backgroundColor = colorResource(id = R.color.white),
                 modifier = Modifier,
                 onClick = {
+                    // TODO: not implemented yet
                     getLocation()
                 },
             ) {
                 Image(
                     painter = painterResource(R.drawable.gps_location),
                     contentDescription = "location",
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
-        GenerateProgressBar(
+        ProgressBar(
             modifier = Modifier
                 .width(44.dp)
                 .height(44.dp)

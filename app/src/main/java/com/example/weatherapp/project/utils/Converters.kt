@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.main
+package com.example.weatherapp.project.utils
 
 /**
 

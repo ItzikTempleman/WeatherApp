@@ -1,6 +1,6 @@
 package com.example.weatherapp.project.requests
 
-import com.example.weatherapp.project.models.current_weather.WeatherResponse
+import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import retrofit2.Response
 import retrofit2.http.GET

@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.screens
+package com.example.weatherapp.project.view
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
@@ -30,14 +30,14 @@ fun ForecastLayout(
     ) {
         LazyRow(modifier = modifier) {
             items(items = forecastData.hourlyList, itemContent = {
-                ForecastLayout(it, modifier)
+                ForecastItem(it, modifier)
             })
         }
     }
 }
 
 @Composable
-fun ForecastLayout(forecast: ForecastItem, modifier: Modifier) {
+fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
     Column(
         modifier = modifier
             .width(150.dp)

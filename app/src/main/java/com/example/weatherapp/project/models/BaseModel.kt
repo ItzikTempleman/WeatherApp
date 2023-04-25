@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.models.current_weather
+package com.example.weatherapp.project.models
 
 import androidx.room.PrimaryKey
 

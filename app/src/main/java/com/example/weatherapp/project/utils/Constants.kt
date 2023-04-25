@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.main
+package com.example.weatherapp.project.utils
 
 object Constants  {
     const val BASE_URL = "https://open-weather13.p.rapidapi.com/"
