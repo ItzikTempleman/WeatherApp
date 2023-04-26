@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.view
+package com.example.weatherapp.project.view.layouts
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.weatherapp.project.models.forecast.ForecastItem
 import com.example.weatherapp.project.models.forecast.ForecastResponse
+import com.example.weatherapp.project.view.convertFromKelvinToCelsius
 
 
 @SuppressLint("CoroutineCreationDuringComposition")

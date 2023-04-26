@@ -19,11 +19,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
-import com.example.weatherapp.project.view.layouts.WindAndHumidity
-import com.example.weatherapp.project.view.ForecastLayout
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
 import com.example.weatherapp.project.view.layouts.BasicWeatherData
+import com.example.weatherapp.project.view.layouts.ForecastLayout
+import com.example.weatherapp.project.view.layouts.WindAndHumidity
 import com.example.weatherapp.project.viewmodels.MainViewModel
 
 // TODO: Check if that's the right way

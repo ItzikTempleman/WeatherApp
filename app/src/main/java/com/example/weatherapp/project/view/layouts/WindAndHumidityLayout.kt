@@ -30,10 +30,6 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
             val firstWeatherOrNull = weatherData.weather.firstOrNull()
             val painter = rememberImagePainter(data = firstWeatherOrNull?.getImage())
 
-
-
-
-
             Image(
                 modifier = Modifier
                     .constrainAs(windSpeedIcon) {

@@ -3,9 +3,11 @@ package com.example.weatherapp.project.view.layouts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -101,14 +103,16 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
 
 
         Row(
-            modifier = Modifier
-                .padding(top = 30.dp)
+            modifier = Modifier.padding(top = 30.dp)
+                .width(90.dp)
+                .height(40.dp)
                 .constrainAs(highLayout) {
-                    top.linkTo(temperature.top)
-                    bottom.linkTo(temperature.bottom)
+                    top.linkTo(feelsLike.top)
+                    bottom.linkTo(feelsLike.bottom)
                     start.linkTo(lowLayout.end)
                     end.linkTo(temperature.start)
                 }
+                .clip(RoundedCornerShape(10.dp))
                 .background(colorResource(id = R.color.light_yellow))
         ) {
 
@@ -120,12 +124,22 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
                 contentDescription = "hot_icon",
                 contentScale = ContentScale.FillBounds
             )
-
+            Text(
+                modifier = Modifier.padding(bottom=12.dp),
+                fontSize = 12.sp,
+                text = "High: ",
+            )
             Text(
                 modifier = Modifier,
-                fontSize = 16.sp,
+                fontSize =20.sp,
                 text = convertFromFahrenheitToCelsius(weatherModel.main.tempMax).toInt()
                     .toString(),
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                modifier = Modifier.padding(bottom = 12.dp),
+                fontSize = 12.sp,
+                text = "o",
                 fontWeight = FontWeight.Bold
             )
         }
@@ -134,14 +148,16 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
 
 
         Row(
-            modifier = Modifier
-                .padding(top = 30.dp)
+            modifier = Modifier.padding(top = 30.dp)
+                .width(90.dp)
+                .height(40.dp)
                 .constrainAs(lowLayout) {
-                    top.linkTo(temperature.top)
-                    bottom.linkTo(temperature.bottom)
+                    top.linkTo(feelsLike.top)
+                    bottom.linkTo(feelsLike.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(highLayout.start)
                 }
+                .clip(RoundedCornerShape(10.dp))
                 .background(colorResource(id = R.color.light_blue))
 
         ) {
@@ -155,12 +171,23 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
                 contentDescription = "cold_icon",
                 contentScale = ContentScale.FillBounds
             )
+            Text(
+                modifier = Modifier.padding(bottom=12.dp),
+                fontSize = 12.sp,
+                text = "Low: ",
 
+            )
             Text(
                 modifier = Modifier,
-                fontSize = 16.sp,
+                fontSize = 20.sp,
                 text = convertFromFahrenheitToCelsius(weatherModel.main.tempMin).toInt()
                     .toString(),
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                modifier = Modifier.padding(bottom = 12.dp),
+                fontSize = 12.sp,
+                text = "o",
                 fontWeight = FontWeight.Bold
             )
         }

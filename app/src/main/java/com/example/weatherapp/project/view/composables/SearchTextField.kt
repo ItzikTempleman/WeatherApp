@@ -60,6 +60,7 @@ fun SearchTextField(
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
+
                 cursorColor = colorResource(R.color.black),
                 focusedIndicatorColor = colorResource(R.color.transparent),
                 unfocusedIndicatorColor = colorResource(R.color.transparent),
