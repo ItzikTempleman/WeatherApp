@@ -5,22 +5,32 @@ import com.example.weatherapp.project.utils.Constants
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class ForecastResponse(
-    @SerializedName("list")
-    val hourlyList: List<ForecastItem> = emptyList(),
-    val city: City = City(coord = CoordinatesInForecast(0.0, 0.0))
-) : Parcelable {
-    companion object {
-        fun getForecastMockObj() = ForecastResponse()
-    }
-}
+ @Parcelize
+ data class ForecastResponse(
+     @SerializedName("list")
+     val hourlyList: MutableList<ForecastItem> = mutableListOf(),
+     val city: City = City(coord = CoordinatesInForecast(0.0, 0.0)),
+
+     ) : Parcelable {
+     companion object {
+         fun getForecastMockObj() = ForecastResponse()
+
+     }
+
+     fun updatedHourlyList(): MutableList<ForecastItem> {
+         val updatedList:MutableList<ForecastItem> =mutableListOf()
+         updatedList.addAll(hourlyList)
+         updatedList.removeFirst()
+         return updatedList
+     }
+
+ }
 
  @Parcelize
  data class ForecastItem(
      val main: MainInForecast,
      @SerializedName("weather")
-     val weatherInForecast: List<WeatherInForecast>,
+     val weatherInForecast: MutableList<WeatherInForecast>,
      val rain: Rain? = null,
      @SerializedName("dt_txt")
      val exactTime: String,
