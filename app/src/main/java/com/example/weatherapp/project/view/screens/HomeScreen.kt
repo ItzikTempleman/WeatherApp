@@ -43,7 +43,8 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 brush = Brush.linearGradient(
                     colors = listOf(
                         colorResource(id = R.color.light_teal),
-                        colorResource(id = R.color.white),
+                        colorResource(id = R.color.very_light_teal),
+                        colorResource(id = R.color.light_teal)
                     )
                 )
             )
@@ -53,7 +54,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 
         SearchTextField(
             modifier = Modifier
-                .padding(6.dp)
+                .padding(8.dp)
                 .fillMaxWidth()
                 .constrainAs(searchET) {
                     top.linkTo(parent.top)
@@ -70,7 +71,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     .constrainAs(mainLayout) {
                         top.linkTo(searchET.bottom)
                     }
-                    .padding(top = 80.dp)
+                    .padding(top = 40.dp)
 
             )
 
@@ -85,9 +86,9 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             ForecastLayout(
                 forecastData = forecastModel, modifier = Modifier
                     .constrainAs(forecastLayout) {
-                        bottom.linkTo(parent.bottom)
+                        bottom.linkTo(location.top)
                     }
-                    .height(200.dp)
+                    .height(220.dp)
             )
         }
 

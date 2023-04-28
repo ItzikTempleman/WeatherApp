@@ -2,6 +2,8 @@ package com.example.weatherapp.project.view.composables
 
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,18 +38,13 @@ fun SearchTextField(
 ) {
 
     var newChar by remember { mutableStateOf("") }
-    Surface(
-        modifier = modifier
-            .clip(shape = RoundedCornerShape(12.dp))
-            .shadow(elevation = 100.dp, ambientColor = DefaultShadowColor),
-        elevation = 50.dp
-    ) {
+
         TextField(
             value = newChar,
             onValueChange = {
                 newChar = it
             },
-            modifier = modifier,
+            modifier = modifier.border(BorderStroke(0.05.dp, colorResource(id = R.color.black))),
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.search), fontWeight = FontWeight.Black
@@ -90,4 +87,3 @@ fun SearchTextField(
             )
         )
     }
-}

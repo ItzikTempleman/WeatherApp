@@ -7,12 +7,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,28 +30,26 @@ fun ForecastLayout(
     modifier: Modifier,
     forecastData: ForecastResponse
 ) {
-    Card(
+
+    LazyRow(
         modifier = modifier
             .fillMaxWidth()
-            .padding(6.dp)
-            .clip(shape = RoundedCornerShape(10.dp)),
-        elevation = 8.dp
+            .padding(8.dp)
     ) {
-        LazyRow(modifier = modifier) {
-            items(items = forecastData.updatedHourlyList(), itemContent = {
-                ForecastItem(it, modifier, forecastData)
-            })
-        }
+        items(items = forecastData.updatedHourlyList(), itemContent = {
+            ForecastItem(it, modifier)
+        })
     }
 }
 
+
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ForecastItem(forecast: ForecastItem, modifier: Modifier, forecastData: ForecastResponse) {
+fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
     ConstraintLayout(
         modifier = modifier
-            .border(BorderStroke(0.1.dp, colorResource(id = R.color.dark_blue)))
-            .width(150.dp)
+            .border(BorderStroke(0.05.dp, colorResource(id = R.color.black)))
+            .width(120.dp)
     ) {
         val (hour, date, dayOfWeek, degrees, degreesPercent, icon, description, precipitation) = createRefs()
 
@@ -99,22 +94,30 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier, forecastData: Forec
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
             )
-
-            Image(
-                modifier = Modifier
-                    .constrainAs(icon) {
-                        top.linkTo(degrees.bottom)
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                    }
-                    .height(50.dp)
-                    .width(50.dp),
-                painter = painter,
+        Image(
+            modifier = Modifier
+                .constrainAs(icon) {
+                    top.linkTo(degrees.bottom)
+                    end.linkTo(parent.end)
+                    start.linkTo(parent.start)
+                }
+                .height(50.dp)
+                .width(50.dp),
+            painter = painter,
                 contentDescription = "forecast_icon"
             )
+        Text(
+            modifier = Modifier
+                .constrainAs(description) {
+                    top.linkTo(icon.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+            text = forecast.weatherInForecast.first().description,
+            fontSize = 16.sp
+        )
         }
     }
-
 
 
 

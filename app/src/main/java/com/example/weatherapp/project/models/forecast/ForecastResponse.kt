@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
  @Parcelize
  data class ForecastResponse(
      @SerializedName("list")
-     val hourlyList: MutableList<ForecastItem> = mutableListOf(),
+     val hourlyList: List<ForecastItem> = emptyList(),
      val city: City = City(coord = CoordinatesInForecast(0.0, 0.0)),
 
      ) : Parcelable {
@@ -30,7 +30,7 @@ import kotlinx.parcelize.Parcelize
  data class ForecastItem(
      val main: MainInForecast,
      @SerializedName("weather")
-     val weatherInForecast: MutableList<WeatherInForecast>,
+     val weatherInForecast: List<WeatherInForecast>,
      val rain: Rain? = null,
      @SerializedName("dt_txt")
      val exactTime: String,
