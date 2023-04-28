@@ -127,6 +127,7 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
             Text(
                 modifier = Modifier,
                 fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
                 text = "o"
             )
         }
