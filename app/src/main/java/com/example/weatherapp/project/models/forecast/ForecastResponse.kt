@@ -36,11 +36,13 @@ import kotlinx.parcelize.Parcelize
      val exactTime: String,
  ) : Parcelable
 
+
  @Parcelize
  data class Rain(
      @SerializedName("3h")
      val threeHours: Double
- ) : Parcelable
+     ) : Parcelable
+
 
  @Parcelize
  data class MainInForecast(

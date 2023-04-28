@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -50,6 +51,7 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                         start.linkTo(parent.start)
                     },
                 fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
                 text = convertFromMilesToKm(weatherData.wind.speed).toInt().toString() + " km/h"
             )
 
@@ -76,6 +78,7 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                         end.linkTo(parent.end)
                     },
                 fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
                 text = capitalizeDesc(weatherData.weather[0].description)
             )
             Image(
@@ -101,6 +104,7 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                         bottom.linkTo(windSpeedValue.bottom)
                     },
                 fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
                 text = weatherData.main.humidity.toString()
             )
         }

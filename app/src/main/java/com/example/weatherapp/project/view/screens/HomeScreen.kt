@@ -71,7 +71,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     .constrainAs(mainLayout) {
                         top.linkTo(searchET.bottom)
                     }
-                    .padding(top = 40.dp)
+                    .padding(top = 50.dp)
 
             )
 
@@ -80,7 +80,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     .constrainAs(conditionLayout) {
                         top.linkTo(mainLayout.bottom)
                     }
-                    .height(150.dp)
+                    .padding(top = 50.dp)
             )
 
             ForecastLayout(
@@ -88,9 +88,10 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     .constrainAs(forecastLayout) {
                         bottom.linkTo(location.top)
                     }
-                    .height(220.dp)
+                    .height(225.dp)
             )
         }
+
 
         // Location Button
         Surface(
@@ -119,6 +120,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 )
             }
         }
+
         ProgressBar(
             modifier = Modifier
                 .width(44.dp)

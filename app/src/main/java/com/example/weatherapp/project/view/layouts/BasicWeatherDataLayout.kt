@@ -50,29 +50,29 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
         )
 
         Text(
-            modifier = Modifier
+            modifier = Modifier.padding(top = 30.dp)
                 .constrainAs(temperature) {
                     top.linkTo(countryNameText.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 },
-            fontSize = 36.sp,
+            fontSize = 48.sp,
             text = convertFromFahrenheitToCelsius(weatherModel.main.temp).toInt()
                 .toString()
         )
 
         Text(
-            modifier = Modifier
+            modifier = Modifier.padding(top = 30.dp)
                 .constrainAs(mainDegreesIcon) {
                     top.linkTo(temperature.top)
                     start.linkTo(temperature.end)
                 },
-            fontSize = 16.sp,
+            fontSize = 24.sp,
             text = "o"
         )
 
         Row(
-            modifier = Modifier
+            modifier = Modifier.padding(top = 30.dp)
                 .constrainAs(lowLayout) {
                     top.linkTo(temperature.bottom)
                     start.linkTo(parent.start)
@@ -109,7 +109,7 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
         }
 
         Row(
-            modifier = Modifier
+            modifier = Modifier.padding(top = 30.dp)
                 .constrainAs(feelsLike) {
                     top.linkTo(temperature.bottom)
                     start.linkTo(parent.start)
@@ -118,7 +118,7 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
         ) {
             Text(
                 modifier = Modifier,
-                fontSize = 16.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 text = "Feels like ${convertFromFahrenheitToCelsius(weatherModel.main.feelsLike).toInt()}"
 
@@ -126,13 +126,13 @@ fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
 
             Text(
                 modifier = Modifier,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 text = "o"
             )
         }
 
         Row(
-            modifier = Modifier
+            modifier = Modifier.padding(top = 30.dp)
                 .constrainAs(highLayout) {
                     top.linkTo(temperature.bottom)
                     end.linkTo(parent.end)
