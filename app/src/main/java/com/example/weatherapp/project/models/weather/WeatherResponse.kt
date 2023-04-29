@@ -4,13 +4,14 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.weatherapp.project.utils.Constants
-import com.example.weatherapp.project.utils.Constants.WEATHER_RESPONSE_TABLE_TABLE
+
 import com.example.weatherapp.project.models.BaseModel
+import com.example.weatherapp.project.utils.Constants.WEATHER_RESPONSE_TABLE
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = WEATHER_RESPONSE_TABLE_TABLE)
+@Entity(tableName = WEATHER_RESPONSE_TABLE)
 data class WeatherResponse(
     @SerializedName("coord")
     val coordinates: Coordinates = Coordinates(0.0, 0.0),

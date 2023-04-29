@@ -14,7 +14,9 @@ object Constants  {
     const val WEATHER_ICON_URL_ENDING = "@2x.png"
 
 
-    const val WEATHER_RESPONSE_TABLE_TABLE="weatherResponseTable"
+    const val WEATHER_RESPONSE_TABLE="weatherResponseTable"
     const val WEATHER_RESPONSE_DATABASE = "conversationDatabase"
+
+    const val GOOGLE_MAPS_API_KEY="AIzaSyCkfBarU6MCQRgncXXbXnT8j5Hix0ODsnA"
 
 }

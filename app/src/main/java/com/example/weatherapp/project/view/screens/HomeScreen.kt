@@ -19,6 +19,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
+import com.example.weatherapp.project.utils.GetLocation
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
 import com.example.weatherapp.project.view.layouts.BasicWeatherData
@@ -110,7 +111,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 modifier = Modifier,
                 onClick = {
                     // TODO: not implemented yet
-                    getLocation()
+                      GetLocation()
                 },
             ) {
                 Image(
@@ -136,10 +137,6 @@ fun HomeScreen(mainViewModel: MainViewModel) {
     }
 }
 
-
-fun getLocation() {
-
-}
 
 
 
