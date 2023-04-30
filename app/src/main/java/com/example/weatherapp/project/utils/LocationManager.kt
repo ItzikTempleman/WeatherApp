@@ -7,7 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import com.example.weatherapp.project.main.BaseApplication
 
-
+@Composable
 fun GetLocation() {
 
 }
