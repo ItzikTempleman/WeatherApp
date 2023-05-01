@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
+import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
@@ -20,12 +20,13 @@ import com.example.weatherapp.theme.WeatherAppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
+    private var cityName = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -57,14 +58,13 @@ class MainActivity : ComponentActivity() {
                     return
                 }
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener(this){task->
-                    val location: Location?=task.result
-                    Log.d("TAG_LOCATION", "longitude: ${location?.longitude} and latitude: ${location?.latitude}")
+                    val location = task.result
                     if(location==null){
                         Toast.makeText(this, "Null Received", Toast.LENGTH_SHORT).show()
                     }
                     else {
                         Toast.makeText(this, "Get Success", Toast.LENGTH_SHORT).show()
-                        //location is here
+                        getCityName(location.latitude, location.longitude)
                     }
                 }
             } else {
@@ -130,5 +130,13 @@ class MainActivity : ComponentActivity() {
         } else {
             Toast.makeText(applicationContext, "Denied", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun getCityName(lat: Double, long: Double): String {
+        val geoCoder = Geocoder(this, Locale.getDefault())
+        val address = geoCoder.getFromLocation(lat, long, 1)
+        cityName = address?.first()?.adminArea.toString()
+        Log.d("TAG","current location: $cityName")
+        return cityName
     }
 }
