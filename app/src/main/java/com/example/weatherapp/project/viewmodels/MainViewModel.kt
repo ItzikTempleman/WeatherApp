@@ -1,15 +1,22 @@
 package com.example.weatherapp.project.viewmodels
 
 
+import android.location.Address
+import android.location.Geocoder
 import android.util.Log
+import android.view.View
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import com.example.weatherapp.project.main.MainActivity
 import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.repositories.Repository
 import com.example.weatherapp.project.view.toggleProgressBar
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel

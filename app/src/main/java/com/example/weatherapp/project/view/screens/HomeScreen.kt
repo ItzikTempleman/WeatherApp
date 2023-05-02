@@ -1,6 +1,7 @@
 package com.example.weatherapp.project.view.screens
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -33,9 +34,9 @@ var forecastModel = ForecastResponse.getForecastMockObj()
 var isProgressBarVisible = mutableStateOf(false)
 
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel) {
+fun HomeScreen(mainViewModel: MainViewModel, thisCityName: String) {
+    Log.d("TAG", "current location: $thisCityName")
     val coroutineScope = rememberCoroutineScope()
-
 
     ConstraintLayout(
         modifier = Modifier

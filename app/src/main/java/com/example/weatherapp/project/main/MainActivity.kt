@@ -4,11 +4,11 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,25 +26,29 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var cityName = ""
+    private  var cityName=""
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
             WeatherAppTheme {
+
                 val mainViewModel = viewModel<MainViewModel>()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
                 getMyCurrentLocation()
-                HomeScreen(mainViewModel)
+
+                HomeScreen(mainViewModel, cityName)
             }
         }
     }
 
 
     private fun getMyCurrentLocation() {
-        if (checkPermission()) {
+        if (isPermissionChecked()) {
             if (isMyLocationEnabled()) {
-                 //final latitude and longitude code here
+                //final latitude and longitude code here
                 if (ActivityCompat.checkSelfPermission(
                         this,
                         Manifest.permission.ACCESS_COARSE_LOCATION
@@ -52,24 +56,25 @@ class MainActivity : ComponentActivity() {
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                         this,
                         Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
+                    )
+                    != PackageManager.PERMISSION_GRANTED
                 ) {
                     requestPermission()
                     return
                 }
-                fusedLocationProviderClient.lastLocation.addOnCompleteListener(this){task->
-                    val location = task.result
-                    if(location==null){
-                        Toast.makeText(this, "Null Received", Toast.LENGTH_SHORT).show()
-                    }
-                    else {
-                        Toast.makeText(this, "Get Success", Toast.LENGTH_SHORT).show()
+                fusedLocationProviderClient.lastLocation.addOnCompleteListener(this) {
+                    val location = it.result
+                    if (location == null) {
+                        Toast.makeText(this, "Null location received", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Location received successfully", Toast.LENGTH_SHORT)
+                            .show()
                         getCityName(location.latitude, location.longitude)
                     }
                 }
             } else {
                 //settings open here
-                Toast.makeText(this, "Turn on location", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Turn on your location", Toast.LENGTH_SHORT).show()
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
             }
@@ -78,6 +83,7 @@ class MainActivity : ComponentActivity() {
             requestPermission()
         }
     }
+
 
     private fun isMyLocationEnabled(): Boolean {
         val locationManager: LocationManager =
@@ -91,23 +97,18 @@ class MainActivity : ComponentActivity() {
     private fun requestPermission() {
         ActivityCompat.requestPermissions(
             this, arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            PERMISSION_REQUEST_ACCESS_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+            ), 100
         )
     }
 
-    companion object {
-        private const val PERMISSION_REQUEST_ACCESS_LOCATION = 100
-    }
 
-    private fun checkPermission(): Boolean {
-        if (ActivityCompat.checkSelfPermission(
+    private fun isPermissionChecked(): Boolean {
+        if (
+            ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-            == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
@@ -116,6 +117,7 @@ class MainActivity : ComponentActivity() {
         }
         return false
     }
+
 
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
@@ -132,11 +134,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
     private fun getCityName(lat: Double, long: Double): String {
         val geoCoder = Geocoder(this, Locale.getDefault())
-        val address = geoCoder.getFromLocation(lat, long, 1)
-        cityName = address?.first()?.adminArea.toString()
-        Log.d("TAG","current location: $cityName")
+        val addresses: List<Address> = geoCoder.getFromLocation(lat, long, 10) as List<Address>
+        for (adr in addresses) {
+            if (!adr.locality.isNullOrEmpty()) {
+                cityName = adr.locality
+                break
+            }
+        }
         return cityName
     }
 }
