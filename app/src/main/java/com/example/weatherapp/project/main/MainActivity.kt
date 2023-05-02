@@ -9,6 +9,7 @@ import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,7 +27,6 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private  var cityName=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -37,18 +37,16 @@ class MainActivity : ComponentActivity() {
                 val mainViewModel = viewModel<MainViewModel>()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-                getMyCurrentLocation()
-
-                HomeScreen(mainViewModel, cityName)
+                HomeScreen( mainViewModel)
             }
         }
     }
 
 
-    private fun getMyCurrentLocation() {
+    private fun getMyCurrentLocation(): String {
+        var updatedCityName = ""
         if (isPermissionChecked()) {
             if (isMyLocationEnabled()) {
-                //final latitude and longitude code here
                 if (ActivityCompat.checkSelfPermission(
                         this,
                         Manifest.permission.ACCESS_COARSE_LOCATION
@@ -60,28 +58,29 @@ class MainActivity : ComponentActivity() {
                     != PackageManager.PERMISSION_GRANTED
                 ) {
                     requestPermission()
-                    return
+
                 }
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener(this) {
+
                     val location = it.result
                     if (location == null) {
                         Toast.makeText(this, "Null location received", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this, "Location received successfully", Toast.LENGTH_SHORT)
                             .show()
-                        getCityName(location.latitude, location.longitude)
+                        updatedCityName = getCityName(location.latitude, location.longitude)
+                        Log.d("TAG", "updatedCityName: $updatedCityName")
                     }
                 }
+
+                return updatedCityName
             } else {
-                //settings open here
-                Toast.makeText(this, "Turn on your location", Toast.LENGTH_SHORT).show()
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
             }
-        } else {
-               //request permission here
-            requestPermission()
-        }
+        } else requestPermission()
+
+        return updatedCityName
     }
 
 
@@ -138,6 +137,7 @@ class MainActivity : ComponentActivity() {
     private fun getCityName(lat: Double, long: Double): String {
         val geoCoder = Geocoder(this, Locale.getDefault())
         val addresses: List<Address> = geoCoder.getFromLocation(lat, long, 10) as List<Address>
+        var cityName = ""
         for (adr in addresses) {
             if (!adr.locality.isNullOrEmpty()) {
                 cityName = adr.locality
