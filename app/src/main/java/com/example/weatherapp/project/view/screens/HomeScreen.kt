@@ -33,8 +33,12 @@ var isProgressBarVisible = mutableStateOf(false)
 
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 804816f (f)
     val coroutineScope = rememberCoroutineScope()
+
 
     ConstraintLayout(
         modifier = Modifier
