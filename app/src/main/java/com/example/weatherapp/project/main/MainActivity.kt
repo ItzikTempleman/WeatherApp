@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Bundle
@@ -27,10 +26,14 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+<<<<<<< HEAD
 
 
     private var cityName = ""
 
+=======
+    private var cityName = ""
+>>>>>>> parent of 804816f (f)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,17 +41,23 @@ class MainActivity : ComponentActivity() {
                 val mainViewModel = viewModel<MainViewModel>()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
+<<<<<<< HEAD
 
                 HomeScreen(mainViewModel)
 
                 getMyCurrentLocation()
                 HomeScreen(mainViewModel)
 
+=======
+                getMyCurrentLocation()
+                HomeScreen(mainViewModel)
+>>>>>>> parent of 804816f (f)
             }
         }
     }
 
 
+<<<<<<< HEAD
 
     private fun getMyCurrentLocation(): String {
         var updatedCityName = ""
@@ -60,6 +69,12 @@ class MainActivity : ComponentActivity() {
             if (isMyLocationEnabled()) {
                  //final latitude and longitude code here
 
+=======
+    private fun getMyCurrentLocation() {
+        if (checkPermission()) {
+            if (isMyLocationEnabled()) {
+                 //final latitude and longitude code here
+>>>>>>> parent of 804816f (f)
                 if (ActivityCompat.checkSelfPermission(
                         this,
                         Manifest.permission.ACCESS_COARSE_LOCATION
@@ -72,6 +87,7 @@ class MainActivity : ComponentActivity() {
                     requestPermission()
 
                 }
+<<<<<<< HEAD
 
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener(this) {
 
@@ -84,6 +100,8 @@ class MainActivity : ComponentActivity() {
                         updatedCityName = getCityName(location.latitude, location.longitude)
                         Log.d("TAG", "updatedCityName: $updatedCityName")
 
+=======
+>>>>>>> parent of 804816f (f)
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener(this){task->
                     val location = task.result
                     if(location==null){
@@ -102,15 +120,21 @@ class MainActivity : ComponentActivity() {
 
                 //settings open here
                 Toast.makeText(this, "Turn on location", Toast.LENGTH_SHORT).show()
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 804816f (f)
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
             }
         } else requestPermission()
 
+<<<<<<< HEAD
         return updatedCityName
     }
 
+=======
+>>>>>>> parent of 804816f (f)
     private fun isMyLocationEnabled(): Boolean {
         val locationManager: LocationManager =
             getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -166,6 +190,7 @@ class MainActivity : ComponentActivity() {
 
     private fun getCityName(lat: Double, long: Double): String {
         val geoCoder = Geocoder(this, Locale.getDefault())
+<<<<<<< HEAD
 
         val addresses: List<Address> = geoCoder.getFromLocation(lat, long, 10) as List<Address>
         var cityName = ""
@@ -180,6 +205,11 @@ class MainActivity : ComponentActivity() {
         cityName = address?.first()?.adminArea.toString()
         Log.d("TAG","current location: $cityName")
 
+=======
+        val address = geoCoder.getFromLocation(lat, long, 1)
+        cityName = address?.first()?.adminArea.toString()
+        Log.d("TAG","current location: $cityName")
+>>>>>>> parent of 804816f (f)
         return cityName
     }
 }
