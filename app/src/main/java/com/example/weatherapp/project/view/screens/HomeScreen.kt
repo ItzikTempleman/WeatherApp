@@ -1,6 +1,7 @@
 package com.example.weatherapp.project.view.screens
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,10 +22,12 @@ import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
+import com.example.weatherapp.project.view.composables.search
 import com.example.weatherapp.project.view.layouts.BasicWeatherData
 import com.example.weatherapp.project.view.layouts.ForecastLayout
 import com.example.weatherapp.project.view.layouts.WindAndHumidity
 import com.example.weatherapp.project.viewmodels.MainViewModel
+import kotlinx.coroutines.CoroutineScope
 
 var isSearched = mutableStateOf(false)
 var weatherModel = WeatherResponse.getMockObj()
@@ -32,10 +35,10 @@ var forecastModel = ForecastResponse.getForecastMockObj()
 var isProgressBarVisible = mutableStateOf(false)
 
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel) {
+fun HomeScreen(mainViewModel: MainViewModel, cityName: String) {
 
     val coroutineScope = rememberCoroutineScope()
-
+    Log.d("TAG", "home screen city name: $cityName")
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -107,8 +110,8 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                 backgroundColor = colorResource(id = R.color.white),
                 modifier = Modifier,
                 onClick = {
-                    // TODO: not implemented yet
-                    //GetLocation()
+
+                    updateLocation(coroutineScope,mainViewModel,cityName)
                 }
             ) {
                 Image(
@@ -132,6 +135,10 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             isVisible = isProgressBarVisible.value
         )
     }
+}
+
+fun updateLocation(coroutineScope: CoroutineScope, mainViewModel: MainViewModel, cityName: String) {
+    search(coroutineScope, mainViewModel, cityName)
 }
 
 

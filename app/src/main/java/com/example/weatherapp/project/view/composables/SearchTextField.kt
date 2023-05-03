@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -82,22 +81,30 @@ fun SearchTextField(
 
                 onSearch = {
                     toggleProgressBar(true)
-                    coroutineScope.launch {
-                        mainViewModel.getWeatherResponse(newChar).handleErrors()
-                            .collect { weatherIt ->
-                                weatherModel = weatherIt
-                                mainViewModel.getForecastResponse(
-                                weatherIt.coordinates.lat,
-                                weatherIt.coordinates.lon
-                            ).collect { forecastIt ->
-                                forecastModel = forecastIt
-                                Log.d("TAG", "forecastModel: $forecastModel")
-                                isSearched.value = true
-                                newChar = ""
-                            }
-                        }
-                    }
+                    search(coroutineScope,mainViewModel, newChar)
+                    newChar = ""
                 }
             )
         )
     }
+
+fun search(
+    coroutineScope: CoroutineScope,
+    mainViewModel: MainViewModel,
+    newChar: String
+) {
+    coroutineScope.launch {
+        mainViewModel.getWeatherResponse(newChar).handleErrors()
+            .collect { weatherIt ->
+                weatherModel = weatherIt
+                mainViewModel.getForecastResponse(
+                    weatherIt.coordinates.lat,
+                    weatherIt.coordinates.lon
+                ).collect { forecastIt ->
+                    forecastModel = forecastIt
+                    Log.d("TAG", "forecastModel: $forecastModel")
+                    isSearched.value = true
+                }
+            }
+    }
+}
