@@ -38,19 +38,11 @@ var isProgressBarVisible = mutableStateOf(false)
 fun HomeScreen(mainViewModel: MainViewModel, cityName: String) {
 
     val coroutineScope = rememberCoroutineScope()
+    //updateLocation(coroutineScope,mainViewModel,cityName)
     Log.d("TAG", "home screen city name: $cityName")
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        colorResource(id = R.color.light_teal),
-                        colorResource(id = R.color.very_light_teal),
-                        colorResource(id = R.color.light_teal)
-                    )
-                )
-            )
     ) {
         val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
 

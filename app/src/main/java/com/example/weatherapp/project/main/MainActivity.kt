@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
+import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.project.view.screens.HomeScreen
 import com.example.weatherapp.project.viewmodels.MainViewModel
@@ -27,16 +28,13 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
-
-
+    private var cityName=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherAppTheme {
                 val mainViewModel = viewModel<MainViewModel>()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-
 
                 HomeScreen(mainViewModel, getMyCurrentLocation())
             }
@@ -46,37 +44,35 @@ class MainActivity : ComponentActivity() {
 
 
     private fun getMyCurrentLocation(): String {
-        var cityName = ""
+        var newCityName=""
         if (wasPermissionAlreadyChecked()) {
             if (isLocationEnabled()) {
-                if (ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     requestPermission()
-
-                    return ""
                 }
+
+
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener(this) {
 
                     val location = it.result
                     if (location != null) {
+
                         Toast.makeText(this, "Location received successfully", Toast.LENGTH_SHORT)
                             .show()
                         cityName = getCityName(location.latitude, location.longitude)
-                        Log.d("TAG", "updatedCityName: $cityName")
-                        //TODO - CITY NAME IS RETRIEVED CORRECTLY OVER HERE!!!
-                    } else {
-                        Toast.makeText(this, "Null location received", Toast.LENGTH_SHORT).show()
+
+                      //  Log.d("TAG", "updatedCityName: $cityName")
                     }
+                    else {
+                        Toast.makeText(this, "No location received", Toast.LENGTH_SHORT).show()
+                        return@addOnCompleteListener
+                    }
+                    newCityName=cityName
+
                 }
-                return cityName
+                Log.d("TAG", "updatedCityName: $cityName")
+
+               return newCityName
             } else {
                 Toast.makeText(this, "Turn on location", Toast.LENGTH_SHORT).show()
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
@@ -85,8 +81,7 @@ class MainActivity : ComponentActivity() {
         } else {
             requestPermission()
         }
-        //TODO - CITY NAME IS NOT (!!!) RETRIEVED CORRECTLY OVER HERE!!!
-        return cityName
+        return newCityName
     }
 
 
