@@ -2,6 +2,8 @@ package com.example.weatherapp.project.view.screens
 
 
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,11 +15,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
+import com.example.weatherapp.project.main.BaseApplication
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.view.ProgressBar
@@ -26,27 +32,38 @@ import com.example.weatherapp.project.view.composables.search
 import com.example.weatherapp.project.view.layouts.BasicWeatherData
 import com.example.weatherapp.project.view.layouts.ForecastLayout
 import com.example.weatherapp.project.view.layouts.WindAndHumidity
+import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import kotlinx.coroutines.CoroutineScope
 
 var isSearched = mutableStateOf(false)
 var weatherModel = WeatherResponse.getMockObj()
 var forecastModel = ForecastResponse.getForecastMockObj()
 var isProgressBarVisible = mutableStateOf(false)
+private lateinit var autocompleteFragment: AutocompleteSupportFragment
 
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel, cityName: String) {
+fun HomeScreen(mainViewModel: MainViewModel) {
 
     val coroutineScope = rememberCoroutineScope()
-    //updateLocation(coroutineScope,mainViewModel,cityName)
-    Log.d("TAG", "home screen city name: $cityName")
+
+    toggleProgressBar(true)
+    mainViewModel.getCityNameLiveData().observe(LocalLifecycleOwner.current){ cityName ->
+        if (cityName.isNotEmpty()){
+            search(coroutineScope, mainViewModel, cityName)
+        }
+    }
+    search(coroutineScope, mainViewModel)
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
     ) {
         val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
 
-
+        PlacesAutoCompleteDropDown()
         SearchTextField(
             modifier = Modifier
                 .padding(8.dp)
@@ -102,8 +119,15 @@ fun HomeScreen(mainViewModel: MainViewModel, cityName: String) {
                 backgroundColor = colorResource(id = R.color.white),
                 modifier = Modifier,
                 onClick = {
-
-                    updateLocation(coroutineScope,mainViewModel,cityName)
+                    toggleProgressBar(true)
+                    if (mainViewModel.getCityNameLiveData().value?.isEmpty() == true){
+                        Toast
+                            .makeText(BaseApplication.getInstance().applicationContext, "No Location permission granted!", Toast.LENGTH_SHORT)
+                            .show()
+                        toggleProgressBar()
+                    }else{
+                        search(coroutineScope, mainViewModel, mainViewModel.getCityNameLiveData().value ?: return@FloatingActionButton)
+                    }
                 }
             ) {
                 Image(
@@ -129,9 +153,33 @@ fun HomeScreen(mainViewModel: MainViewModel, cityName: String) {
     }
 }
 
-fun updateLocation(coroutineScope: CoroutineScope, mainViewModel: MainViewModel, cityName: String) {
-    search(coroutineScope, mainViewModel, cityName)
+@Composable
+fun PlacesAutoCompleteDropDown(){
+    val context = LocalContext.current
+
+    AndroidView(
+        factory = { context ->
+            AutocompleteSupportFragment()
+                .apply {
+                    setPlaceFields(
+                        listOf(
+                            Place.Field.ID,
+                            Place.Field.NAME,
+                            Place.Field.LAT_LNG,
+                            Place.Field.ADDRESS
+                        )
+                    )
+                    setTypeFilter(TypeFilter.CITIES)
+                }.view ?: View(context)
+
+        },
+        update = { view ->
+            // Do nothing here
+        },
+        modifier = Modifier.fillMaxSize()
+    )
 }
+
 
 
 

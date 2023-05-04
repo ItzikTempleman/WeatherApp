@@ -13,13 +13,17 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.weatherapp.project.utils.Constants
 import com.example.weatherapp.project.view.screens.HomeScreen
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import com.example.weatherapp.theme.WeatherAppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.libraries.places.api.Places
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -27,51 +31,60 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    var cityName = ""
+    private lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!Places.isInitialized()) {
+            Places.initialize(this, Constants.GOOGLE_MAPS_API_KEY)
+        }
+
         setContent {
+            mainViewModel = viewModel()
             WeatherAppTheme {
-                val mainViewModel = viewModel<MainViewModel>()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-
-                HomeScreen(mainViewModel, getMyCurrentLocation())
+                getMyCurrentLocation()
+                HomeScreen(mainViewModel)
             }
-
         }
     }
 
 
     private fun getMyCurrentLocation(): String {
-
+        var cityName = ""
         if (wasPermissionAlreadyChecked()) {
             if (isLocationEnabled()) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(
+                        this, Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                    != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                    != PackageManager.PERMISSION_GRANTED
+                ) {
                     requestPermission()
                 }
 
-                var newCityName=""
+
                 fusedLocationProviderClient.lastLocation.addOnCompleteListener(this) {
 
                     val location = it.result
                     if (location != null) {
-
-                        Toast.makeText(this, "Location received successfully", Toast.LENGTH_SHORT)
-                            .show()
+                        /*Toast.makeText(this, "Location received successfully", Toast.LENGTH_SHORT)
+                            .show()*/
                         cityName = getCityName(location.latitude, location.longitude)
+                        mainViewModel.setCityNameLiveData(cityName)
+                        Log.d("TAG", "Location received successfully: $cityName")
 
-                         Log.d("TAG", "updatedCityName: $cityName")
-                    }
-                    else {
+                        //return@addOnCompleteListener
+                    } else {
                         Toast.makeText(this, "No location received", Toast.LENGTH_SHORT).show()
-                        return@addOnCompleteListener
                     }
-                    newCityName=cityName
-
                 }
+                Log.d("TAG", "cityName: $cityName")
 
-
-                return newCityName
             } else {
                 Toast.makeText(this, "Turn on location", Toast.LENGTH_SHORT).show()
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
@@ -136,16 +149,15 @@ class MainActivity : ComponentActivity() {
 
     private fun getCityName(lat: Double, long: Double): String {
         val geoCoder = Geocoder(this, Locale.getDefault())
-
-
         val addresses: List<Address> = geoCoder.getFromLocation(lat, long, 10) as List<Address>
-        var cityName = ""
+        var cityNameFromLocation = ""
         for (adr in addresses) {
             if (!adr.locality.isNullOrEmpty()) {
-                cityName = adr.locality
+                cityNameFromLocation = adr.locality
                 break
             }
         }
-        return cityName
+        return cityNameFromLocation
     }
+
 }

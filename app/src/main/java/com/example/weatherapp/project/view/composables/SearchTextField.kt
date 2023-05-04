@@ -1,7 +1,6 @@
 package com.example.weatherapp.project.view.composables
 
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -91,10 +90,10 @@ fun SearchTextField(
 fun search(
     coroutineScope: CoroutineScope,
     mainViewModel: MainViewModel,
-    newChar: String
+    cityName: String = ""
 ) {
     coroutineScope.launch {
-        mainViewModel.getWeatherResponse(newChar).handleErrors()
+        mainViewModel.getWeatherResponse(cityName).handleErrors()
             .collect { weatherIt ->
                 weatherModel = weatherIt
                 mainViewModel.getForecastResponse(
@@ -102,7 +101,6 @@ fun search(
                     weatherIt.coordinates.lon
                 ).collect { forecastIt ->
                     forecastModel = forecastIt
-                    Log.d("TAG", "forecastModel: $forecastModel")
                     isSearched.value = true
                 }
             }

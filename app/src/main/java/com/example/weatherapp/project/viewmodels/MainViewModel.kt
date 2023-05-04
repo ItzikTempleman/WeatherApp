@@ -2,19 +2,41 @@ package com.example.weatherapp.project.viewmodels
 
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.weatherapp.project.models.weather.WeatherResponse
+import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.project.models.forecast.ForecastResponse
+import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.repositories.Repository
 import com.example.weatherapp.project.view.toggleProgressBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel
 @Inject constructor(private val repository: Repository) : ViewModel() {
+
+    private var cityNameFlow = flowOf("")
+    private val cityNameLiveData = MutableLiveData<String>()
+
+    init {
+        viewModelScope.launch {
+            cityNameFlow.collect{ cityName ->
+                cityNameLiveData.value = cityName
+            }
+        }
+    }
+
+    fun setCityNameLiveData(cityName: String) {
+        cityNameLiveData.value = cityName
+    }
+
+    fun getCityNameLiveData() = cityNameLiveData
 
     fun getWeatherResponse(city: String): Flow<WeatherResponse> {
         val weatherListFlow = flow {
@@ -23,7 +45,8 @@ class MainViewModel
                 val responseBody = response.body()
                 if (responseBody != null) {
                     emit(responseBody)
-                    toggleProgressBar()                } else Log.d("TAG", "first failure message: " + response.message())
+                    toggleProgressBar()
+                } else Log.d("TAG", "first failure message: " + response.message())
                 toggleProgressBar()
                 return@flow
             } else Log.d("TAG", "second failure message: " + response.message())

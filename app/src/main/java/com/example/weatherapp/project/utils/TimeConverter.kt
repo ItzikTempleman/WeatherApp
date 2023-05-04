@@ -17,7 +17,7 @@ fun getDayOfWeek(jsonDate: String): String {
     } else today + 1
 
     val givenDate = date?.day?.plus(1)
-    val dateFormat = SimpleDateFormat("EEEE")
+    val dateFormat = SimpleDateFormat("EEEE", Locale.getDefault())
     dayOfWeek = date?.let { dateFormat.format(it) }.toString()
     if (givenDate == today) {
         dayOfWeek = "Today"
@@ -31,7 +31,7 @@ fun getDayOfWeek(jsonDate: String): String {
 fun getDate(jsonDate: String): String {
     val dateOfMonth: String
     val date = simpleDateFormat.parse(jsonDate)
-    val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yy")
+    val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
     dateOfMonth = date?.let { dateFormat.format(it) }.toString()
     return dateOfMonth
 }
@@ -39,7 +39,7 @@ fun getDate(jsonDate: String): String {
 fun getHourOfDay(jsonDate: String): String {
     val hour: String
     val date = simpleDateFormat.parse(jsonDate)
-    val dateFormat: DateFormat = SimpleDateFormat("H:mm")
+    val dateFormat: DateFormat = SimpleDateFormat("H:mm", Locale.getDefault())
     hour = date?.let { dateFormat.format(it) }.toString()
     return hour
 }
