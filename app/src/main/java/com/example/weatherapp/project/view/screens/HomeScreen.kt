@@ -1,7 +1,6 @@
 package com.example.weatherapp.project.view.screens
 
 
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -14,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
@@ -37,13 +35,12 @@ import com.example.weatherapp.project.viewmodels.MainViewModel
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import kotlinx.coroutines.CoroutineScope
 
 var isSearched = mutableStateOf(false)
 var weatherModel = WeatherResponse.getMockObj()
 var forecastModel = ForecastResponse.getForecastMockObj()
 var isProgressBarVisible = mutableStateOf(false)
-private lateinit var autocompleteFragment: AutocompleteSupportFragment
+
 
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
@@ -59,11 +56,12 @@ fun HomeScreen(mainViewModel: MainViewModel) {
     search(coroutineScope, mainViewModel)
     ConstraintLayout(
         modifier = Modifier
+            .background(colorResource(id = R.color.light_teal))
             .fillMaxSize()
     ) {
         val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
 
-        PlacesAutoCompleteDropDown()
+
         SearchTextField(
             modifier = Modifier
                 .padding(8.dp)
@@ -153,32 +151,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
     }
 }
 
-@Composable
-fun PlacesAutoCompleteDropDown(){
-    val context = LocalContext.current
 
-    AndroidView(
-        factory = { context ->
-            AutocompleteSupportFragment()
-                .apply {
-                    setPlaceFields(
-                        listOf(
-                            Place.Field.ID,
-                            Place.Field.NAME,
-                            Place.Field.LAT_LNG,
-                            Place.Field.ADDRESS
-                        )
-                    )
-                    setTypeFilter(TypeFilter.CITIES)
-                }.view ?: View(context)
-
-        },
-        update = { view ->
-            // Do nothing here
-        },
-        modifier = Modifier.fillMaxSize()
-    )
-}
 
 
 

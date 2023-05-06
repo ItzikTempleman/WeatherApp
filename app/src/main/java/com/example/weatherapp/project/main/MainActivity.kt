@@ -72,13 +72,11 @@ class MainActivity : ComponentActivity() {
 
                     val location = it.result
                     if (location != null) {
-                        /*Toast.makeText(this, "Location received successfully", Toast.LENGTH_SHORT)
-                            .show()*/
+
                         cityName = getCityName(location.latitude, location.longitude)
                         mainViewModel.setCityNameLiveData(cityName)
                         Log.d("TAG", "Location received successfully: $cityName")
 
-                        //return@addOnCompleteListener
                     } else {
                         Toast.makeText(this, "No location received", Toast.LENGTH_SHORT).show()
                     }
@@ -95,7 +93,6 @@ class MainActivity : ComponentActivity() {
         }
         return cityName
     }
-
 
     private fun isLocationEnabled(): Boolean {
         val locationManager: LocationManager =
