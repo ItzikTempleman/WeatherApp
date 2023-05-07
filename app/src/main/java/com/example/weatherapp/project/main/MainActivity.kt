@@ -1,6 +1,7 @@
 package com.example.weatherapp.project.main
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,17 +14,21 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.weatherapp.project.utils.Constants
+import com.example.weatherapp.project.utils.Constants.GOOGLE_MAPS_API_KEY
 import com.example.weatherapp.project.view.screens.HomeScreen
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import com.example.weatherapp.theme.WeatherAppTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -36,18 +41,35 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!Places.isInitialized()) {
-            Places.initialize(this, Constants.GOOGLE_MAPS_API_KEY)
+            Places.initialize(this, GOOGLE_MAPS_API_KEY)
         }
+
 
         setContent {
             mainViewModel = viewModel()
             WeatherAppTheme {
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+                val fields = listOf(Place.Field.ID, Place.Field.NAME)
+                val searchIntent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).build(this)
+
                 getMyCurrentLocation()
-                HomeScreen(mainViewModel)
+                HomeScreen(mainViewModel, searchGoogleMapsResult, searchIntent)
             }
         }
     }
+
+    private val searchGoogleMapsResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val intent = it.data
+                if (intent != null) {
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    Log.d("TAG", "Place: ${place.name}, ${place.id}")
+                }
+            } else if (it.resultCode == Activity.RESULT_CANCELED) {
+                Log.d("TAG", "User canceled autocomplete")
+            }
+        }
 
 
     private fun getMyCurrentLocation(): String {
@@ -75,13 +97,13 @@ class MainActivity : ComponentActivity() {
 
                         cityName = getCityName(location.latitude, location.longitude)
                         mainViewModel.setCityNameLiveData(cityName)
-                        Log.d("TAG", "Location received successfully: $cityName")
+
 
                     } else {
                         Toast.makeText(this, "No location received", Toast.LENGTH_SHORT).show()
                     }
                 }
-                Log.d("TAG", "cityName: $cityName")
+
 
             } else {
                 Toast.makeText(this, "Turn on location", Toast.LENGTH_SHORT).show()
@@ -158,3 +180,5 @@ class MainActivity : ComponentActivity() {
     }
 
 }
+
+

@@ -1,8 +1,9 @@
 package com.example.weatherapp.project.view.screens
 
 
-import android.view.View
+import android.content.Intent
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,12 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.BaseApplication
@@ -32,9 +31,6 @@ import com.example.weatherapp.project.view.layouts.ForecastLayout
 import com.example.weatherapp.project.view.layouts.WindAndHumidity
 import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.TypeFilter
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 
 var isSearched = mutableStateOf(false)
 var weatherModel = WeatherResponse.getMockObj()
@@ -43,7 +39,11 @@ var isProgressBarVisible = mutableStateOf(false)
 
 
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel) {
+fun HomeScreen(
+    mainViewModel: MainViewModel,
+    searchGoogleMapsResult: ActivityResultLauncher<Intent>,
+    searchIntent: Intent
+) {
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -53,10 +53,10 @@ fun HomeScreen(mainViewModel: MainViewModel) {
             search(coroutineScope, mainViewModel, cityName)
         }
     }
+
     search(coroutineScope, mainViewModel)
     ConstraintLayout(
         modifier = Modifier
-            .background(colorResource(id = R.color.light_teal))
             .fillMaxSize()
     ) {
         val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
@@ -70,7 +70,9 @@ fun HomeScreen(mainViewModel: MainViewModel) {
                     top.linkTo(parent.top)
                 },
             coroutineScope = coroutineScope,
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            searchIntent=searchIntent,
+            searchGoogleMapsResult=searchGoogleMapsResult
         )
 
 

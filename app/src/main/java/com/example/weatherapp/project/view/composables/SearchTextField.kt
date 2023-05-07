@@ -1,12 +1,16 @@
 package com.example.weatherapp.project.view.composables
 
 
+import android.content.Intent
+import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -27,6 +31,7 @@ import com.example.weatherapp.project.view.screens.isSearched
 import com.example.weatherapp.project.view.screens.weatherModel
 import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
+import com.google.android.libraries.places.widget.Autocomplete
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -35,15 +40,23 @@ import kotlinx.coroutines.launch
 fun SearchTextField(
     modifier: Modifier,
     coroutineScope: CoroutineScope,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    searchGoogleMapsResult: ActivityResultLauncher<Intent>,
+    searchIntent: Intent
 ) {
-
     var newChar by remember { mutableStateOf("") }
 
         TextField(
             value = newChar,
             onValueChange = {
-                newChar = it
+                searchGoogleMapsResult.launch(searchIntent)
+
+                if(newChar.length>3) {
+                    val resultName=Autocomplete.getPlaceFromIntent(searchIntent).name as String
+                    newChar = resultName
+                    Log.d("TAGF", "resultName: $resultName")
+                }
+                else   newChar=it
             },
 
             modifier = modifier.border(BorderStroke(0.05.dp, colorResource(id = R.color.black))),
@@ -86,6 +99,12 @@ fun SearchTextField(
             )
         )
     }
+
+
+
+
+
+
 
 fun search(
     coroutineScope: CoroutineScope,
