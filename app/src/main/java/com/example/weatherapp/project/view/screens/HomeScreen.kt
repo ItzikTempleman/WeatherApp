@@ -5,7 +5,6 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.FloatingActionButton
@@ -25,12 +24,14 @@ import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
-import com.example.weatherapp.project.view.composables.search
+import com.example.weatherapp.project.view.handleErrors
 import com.example.weatherapp.project.view.layouts.BasicWeatherData
 import com.example.weatherapp.project.view.layouts.ForecastLayout
 import com.example.weatherapp.project.view.layouts.WindAndHumidity
 import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 var isSearched = mutableStateOf(false)
 var weatherModel = WeatherResponse.getMockObj()
@@ -153,6 +154,25 @@ fun HomeScreen(
     }
 }
 
+fun search(
+    coroutineScope: CoroutineScope,
+    mainViewModel: MainViewModel,
+    cityName: String = ""
+) {
+    coroutineScope.launch {
+        mainViewModel.getWeatherResponse(cityName).handleErrors()
+            .collect { weatherIt ->
+                weatherModel = weatherIt
+                mainViewModel.getForecastResponse(
+                    weatherIt.coordinates.lat,
+                    weatherIt.coordinates.lon
+                ).collect { forecastIt ->
+                    forecastModel = forecastIt
+                    isSearched.value = true
+                }
+            }
+    }
+}
 
 
 
