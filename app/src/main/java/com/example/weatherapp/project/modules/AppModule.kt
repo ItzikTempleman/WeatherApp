@@ -1,9 +1,11 @@
 package com.example.weatherapp.project.modules
 
 
+import com.example.weatherapp.project.requests.ImageRequestInterceptor
 import com.example.weatherapp.project.requests.Requests
 import com.example.weatherapp.project.requests.WeatherRequestInterceptor
 import com.example.weatherapp.project.utils.Constants.BASE_URL
+import com.example.weatherapp.project.utils.Constants.IMAGE_BASE_URL
 
 
 import dagger.Module
@@ -41,8 +43,23 @@ object AppModule {
             .build()
     }
 
-    
 
+    @Provides
+    @Singleton
+    fun provideImageRetrofit(): Retrofit {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        return Retrofit.Builder()
+            .baseUrl(IMAGE_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(
+                OkHttpClient.Builder()
+                    .addInterceptor(ImageRequestInterceptor())
+                    .addInterceptor(interceptor)
+                    .build()
+            )
+            .build()
+    }
 
 
     @Singleton
@@ -50,7 +67,7 @@ object AppModule {
     fun provideRequestService(retrofit: Retrofit): Requests =
         retrofit.create(Requests::class.java)
 
-   /** @Provides
+    /** @Provides
     @Singleton
     fun provideDb(@ApplicationContext context: Context) = Room.databaseBuilder(
         context, AppDatabase::class.java, WEATHER_RESPONSE_DATABASE)

@@ -55,6 +55,7 @@ class MainViewModel
         return weatherListFlow
     }
 
+
     fun getForecastResponse(lat: Double, lon: Double): Flow<ForecastResponse> {
         val forecastFlow: Flow<ForecastResponse> = flow {
             val forecastResponse = repository.getForecast(lat, lon)
@@ -71,6 +72,24 @@ class MainViewModel
             return@flow
         }
         return forecastFlow
+    }
+
+    fun getImageResponse( cityImage: String): Flow<String> {
+        val imageResponseFlow: Flow<String> = flow {
+            val imageResponse = repository.getLocationImage(cityImage)
+            if (imageResponse.isSuccessful) {
+                val imageResponseBody = imageResponse.body()
+                if (imageResponseBody != null) {
+                   val image=imageResponseBody.cityResponse.resultResponse.results.first().image.photo.photoSizes[3].url
+                    emit(image)
+                } else Log.d(
+                    "TAG", "second forecast failure message: " + imageResponse.message()
+                )
+                return@flow
+            } else Log.d("TAG", "first forecast failure message: " + imageResponse.message())
+            return@flow
+        }
+        return imageResponseFlow
     }
 
 }

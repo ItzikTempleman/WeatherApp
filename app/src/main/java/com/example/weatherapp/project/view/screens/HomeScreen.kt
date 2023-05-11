@@ -22,9 +22,9 @@ import com.example.weatherapp.R
 import com.example.weatherapp.project.main.BaseApplication
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
+import com.example.weatherapp.project.utils.handleErrors
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
-import com.example.weatherapp.project.utils.handleErrors
 import com.example.weatherapp.project.view.layouts.BasicWeatherData
 import com.example.weatherapp.project.view.layouts.ForecastLayout
 import com.example.weatherapp.project.view.layouts.WindAndHumidity
@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 
 var isSearched = mutableStateOf(false)
 var weatherModel = WeatherResponse.getMockObj()
+var imageModel = ""
 var forecastModel = ForecastResponse.getForecastMockObj()
 var isProgressBarVisible = mutableStateOf(false)
 
@@ -160,17 +161,17 @@ fun search(
     cityName: String = ""
 ) {
     coroutineScope.launch {
-        mainViewModel.getWeatherResponse(cityName).handleErrors()
-            .collect { weatherIt ->
-                weatherModel = weatherIt
-                mainViewModel.getForecastResponse(
-                    weatherIt.coordinates.lat,
-                    weatherIt.coordinates.lon
-                ).collect { forecastIt ->
+        mainViewModel.getWeatherResponse(cityName).handleErrors().collect { weatherIt ->
+            weatherModel = weatherIt
+            mainViewModel.getForecastResponse(weatherIt.coordinates.lat, weatherIt.coordinates.lon)
+                .collect { forecastIt ->
                     forecastModel = forecastIt
                     isSearched.value = true
+                    mainViewModel.getImageResponse(cityName).collect { imageIt ->
+                        imageModel=imageIt
+                    }
                 }
-            }
+        }
     }
 }
 
