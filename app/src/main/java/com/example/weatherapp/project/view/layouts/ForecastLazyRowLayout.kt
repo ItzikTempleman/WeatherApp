@@ -25,7 +25,7 @@ import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.utils.getDate
 import com.example.weatherapp.project.utils.getDayOfWeek
 import com.example.weatherapp.project.utils.getHourOfDay
-import com.example.weatherapp.project.view.convertFromKelvinToCelsius
+import com.example.weatherapp.project.utils.convertFromKelvinToCelsius
 
 
 @SuppressLint("CoroutineCreationDuringComposition")

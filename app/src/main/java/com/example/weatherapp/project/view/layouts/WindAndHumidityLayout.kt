@@ -14,8 +14,8 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.weatherapp.R
 import com.example.weatherapp.project.models.weather.WeatherResponse
-import com.example.weatherapp.project.view.capitalizeDesc
-import com.example.weatherapp.project.view.convertFromMilesToKm
+import com.example.weatherapp.project.utils.capitalizeDesc
+import com.example.weatherapp.project.utils.convertFromMilesToKm
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable

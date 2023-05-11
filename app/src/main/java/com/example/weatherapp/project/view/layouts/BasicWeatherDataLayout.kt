@@ -14,8 +14,8 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.models.weather.WeatherResponse
-import com.example.weatherapp.project.view.convertFromFahrenheitToCelsius
-import com.example.weatherapp.project.view.getFullCountryName
+import com.example.weatherapp.project.utils.convertFromFahrenheitToCelsius
+import com.example.weatherapp.project.utils.getFullCountryName
 
 @Composable
 fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
