@@ -11,7 +11,6 @@ import com.example.weatherapp.project.repositories.Repository
 import com.example.weatherapp.project.view.toggleProgressBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -73,6 +72,7 @@ class MainViewModel
         }
         return forecastFlow
     }
+
 }
 
 

@@ -47,6 +47,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             mainViewModel = viewModel()
+
+
             WeatherAppTheme {
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
                 val fields = listOf(Place.Field.ID, Place.Field.NAME)

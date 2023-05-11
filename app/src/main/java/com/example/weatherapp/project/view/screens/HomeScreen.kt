@@ -72,8 +72,8 @@ fun HomeScreen(
                 },
             coroutineScope = coroutineScope,
             mainViewModel = mainViewModel,
-            searchIntent=searchIntent,
-            searchGoogleMapsResult=searchGoogleMapsResult
+            searchIntent = searchIntent,
+            searchGoogleMapsResult = searchGoogleMapsResult
         )
 
 
