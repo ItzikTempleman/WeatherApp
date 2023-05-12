@@ -41,6 +41,30 @@ fun <T> Flow<T>.handleErrors(): Flow<T> = flow {
 
 
 
+//TODO THIS IS FOR HILT MODULE LATER:
+
+
+
+/**
+private val typeConverter = Converters()
+ */
+
+
+
+/** @Provides
+@Singleton
+fun provideDb(@ApplicationContext context: Context) = Room.databaseBuilder(
+context, AppDatabase::class.java, WEATHER_RESPONSE_DATABASE)
+addTypeConverter(typeConverter).
+.allowMainThreadQueries()
+.fallbackToDestructiveMigration()
+.build()
+
+@Provides
+@Singleton
+fun provideDao(appDatabase: AppDatabase): AppDao = appDatabase.getDao()
+ */
+
 
 
 
