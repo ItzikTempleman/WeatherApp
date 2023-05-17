@@ -6,8 +6,9 @@ import com.example.weatherapp.project.models.weather.WeatherResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
-interface Requests {
+interface WeatherAndForecastService {
 
     @GET("city/{cityName}")
     suspend fun getCityWeatherData(
@@ -21,11 +22,6 @@ interface Requests {
         @Path("lon") longitude: Double
     ): Response<ForecastResponse>
 
-    @GET("{cityName}")
-    suspend fun getCityImage(
-        @Path("cityName") cityName: String,
-
-    ): Response<LocationImageResponse>
-
+    @GET("locations/v2/auto-complete?")
+    suspend fun getCityImage(@Query("query") cityName: String ): Response<LocationImageResponse>
 }
-

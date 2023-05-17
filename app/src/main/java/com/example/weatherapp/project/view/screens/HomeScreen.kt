@@ -2,6 +2,7 @@ package com.example.weatherapp.project.view.screens
 
 
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
@@ -13,16 +14,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.BaseApplication
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
-import com.example.weatherapp.project.utils.handleErrors
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
 import com.example.weatherapp.project.view.layouts.BasicWeatherData
@@ -33,6 +36,7 @@ import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+var isCurrentLocation = mutableStateOf(true)
 var isSearched = mutableStateOf(false)
 var weatherModel = WeatherResponse.getMockObj()
 var imageModel = ""
@@ -40,6 +44,7 @@ var forecastModel = ForecastResponse.getForecastMockObj()
 var isProgressBarVisible = mutableStateOf(false)
 
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun HomeScreen(
     mainViewModel: MainViewModel,
@@ -57,11 +62,14 @@ fun HomeScreen(
     }
 
     search(coroutineScope, mainViewModel)
+
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
     ) {
         val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
+
 
 
         SearchTextField(
@@ -79,6 +87,14 @@ fun HomeScreen(
 
 
         if (isSearched.value) {
+            isCurrentLocation.value=false
+            val backgroundImagePainter = rememberImagePainter(data = imageModel)
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = backgroundImagePainter,
+                contentDescription = "location_background_image",
+                contentScale = ContentScale.FillHeight
+            )
 
             BasicWeatherData(
                 weatherModel = weatherModel, modifier = Modifier
@@ -121,6 +137,7 @@ fun HomeScreen(
                 backgroundColor = colorResource(id = R.color.white),
                 modifier = Modifier,
                 onClick = {
+                    isCurrentLocation.value=true
                     toggleProgressBar(true)
                     if (mainViewModel.getCityNameLiveData().value?.isEmpty() == true){
                         Toast
@@ -133,7 +150,7 @@ fun HomeScreen(
                 }
             ) {
                 Image(
-                    painter = painterResource(R.drawable.gps_location),
+                    painter = if(!isCurrentLocation.value) painterResource(R.drawable.gps_no_location) else painterResource(R.drawable.gps_location) ,
                     contentDescription = "location",
                     modifier = Modifier.size(24.dp)
                 )
@@ -161,17 +178,23 @@ fun search(
     cityName: String = ""
 ) {
     coroutineScope.launch {
-        mainViewModel.getWeatherResponse(cityName).handleErrors().collect { weatherIt ->
-            weatherModel = weatherIt
-            mainViewModel.getForecastResponse(weatherIt.coordinates.lat, weatherIt.coordinates.lon)
-                .collect { forecastIt ->
-                    forecastModel = forecastIt
-                    isSearched.value = true
-                    mainViewModel.getImageResponse(cityName).collect { imageIt ->
-                        imageModel=imageIt
+        mainViewModel.getWeatherResponse(cityName)
+            .collect { weatherIt ->
+                weatherModel = weatherIt
+                mainViewModel.getForecastResponse(
+                    weatherIt.coordinates.lat,
+                    weatherIt.coordinates.lon
+                )
+                    .collect { forecastIt ->
+                        forecastModel = forecastIt
+                        isSearched.value = true
+                        mainViewModel.getImageResponse(cityName)
+                            .collect { imageIt ->
+                                imageModel = imageIt
+                                Log.d("TAG_IMG", "image url: $imageModel")
+                            }
                     }
-                }
-        }
+            }
     }
 }
 

@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.requests
+package com.example.weatherapp.project.utils
 
 import com.example.weatherapp.project.utils.Constants.API_HOST_NAME
 import com.example.weatherapp.project.utils.Constants.API_HOST_VALUE

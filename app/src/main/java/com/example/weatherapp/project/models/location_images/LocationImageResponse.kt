@@ -14,7 +14,7 @@ data class LocationImageResponse(
 @Parcelize
 data class CityResponse(
 
-    @SerializedName("typeahead_autocomplete")
+    @SerializedName("Typeahead_autocomplete")
     val resultResponse: Typeahead_autocomplete
 ) : Parcelable
 

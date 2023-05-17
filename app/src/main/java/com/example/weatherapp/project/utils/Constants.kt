@@ -2,7 +2,7 @@ package com.example.weatherapp.project.utils
 
 object Constants  {
     const val BASE_URL = "https://open-weather13.p.rapidapi.com/"
-    const val IMAGE_BASE_URL= "https://travel-advisor.p.rapidapi.com/locations/v2/auto-complete?query="
+    const val IMAGE_BASE_URL= "https://travel-advisor.p.rapidapi.com/"
 
 
     const val API_KEY_NAME = "x-rapidapi-key"

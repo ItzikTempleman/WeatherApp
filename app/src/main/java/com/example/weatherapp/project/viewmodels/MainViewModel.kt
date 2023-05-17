@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
-import com.example.weatherapp.project.repositories.Repository
+import com.example.weatherapp.project.repositories.RepositoryImp
 import com.example.weatherapp.project.view.toggleProgressBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -18,14 +18,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel
-@Inject constructor(private val repository: Repository) : ViewModel() {
+@Inject constructor(
+    private val repositoryImp: RepositoryImp
+) : ViewModel() {
 
     private var cityNameFlow = flowOf("")
     private val cityNameLiveData = MutableLiveData<String>()
 
     init {
         viewModelScope.launch {
-            cityNameFlow.collect{ cityName ->
+            cityNameFlow.collect { cityName ->
                 cityNameLiveData.value = cityName
             }
         }
@@ -39,7 +41,7 @@ class MainViewModel
 
     fun getWeatherResponse(city: String): Flow<WeatherResponse> {
         val weatherListFlow = flow {
-            val response = repository.getWeather(city)
+            val response = repositoryImp.getWeather(city)
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 if (responseBody != null) {
@@ -58,7 +60,7 @@ class MainViewModel
 
     fun getForecastResponse(lat: Double, lon: Double): Flow<ForecastResponse> {
         val forecastFlow: Flow<ForecastResponse> = flow {
-            val forecastResponse = repository.getForecast(lat, lon)
+            val forecastResponse = repositoryImp.getForecast(lat, lon)
             if (forecastResponse.isSuccessful) {
                 val forecastResponseBody = forecastResponse.body()
                 if (forecastResponseBody != null) {
@@ -76,11 +78,11 @@ class MainViewModel
 
     fun getImageResponse( cityImage: String): Flow<String> {
         val imageResponseFlow: Flow<String> = flow {
-            val imageResponse = repository.getLocationImage(cityImage)
+            val imageResponse = repositoryImp.getLocationImage(cityImage)
             if (imageResponse.isSuccessful) {
                 val imageResponseBody = imageResponse.body()
                 if (imageResponseBody != null) {
-                   val image=imageResponseBody.cityResponse.resultResponse.results.first().image.photo.photoSizes[3].url
+                   val image=imageResponseBody.cityResponse.resultResponse.results[4].image.photo.photoSizes.last().url
                     emit(image)
                 } else Log.d(
                     "TAG", "second forecast failure message: " + imageResponse.message()
