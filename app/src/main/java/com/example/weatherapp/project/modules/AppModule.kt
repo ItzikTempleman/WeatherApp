@@ -4,6 +4,7 @@ package com.example.weatherapp.project.modules
 import com.example.weatherapp.project.requests.WeatherAndForecastService
 import com.example.weatherapp.project.utils.Constants.BASE_URL
 import com.example.weatherapp.project.utils.Constants.IMAGE_BASE_URL
+import com.example.weatherapp.project.utils.Constants.UNSPLASH_IMAGE_BASE_URL
 import com.example.weatherapp.project.utils.ImageRequestInterceptor
 import com.example.weatherapp.project.utils.WeatherRequestInterceptor
 import dagger.Module
@@ -54,4 +55,18 @@ object AppModule {
         return retrofit.create(WeatherAndForecastService::class.java)
     }
 
+
+    @Provides
+    @Singleton
+    @Named("unsplashLocationImages")
+    fun provideLocationImageServiceFromUnsplashApi(): WeatherAndForecastService {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(UNSPLASH_IMAGE_BASE_URL).addConverterFactory(GsonConverterFactory.create())
+            .client(
+                OkHttpClient.Builder()
+                    .build()
+            )
+            .build()
+        return retrofit.create(WeatherAndForecastService::class.java)
+    }
 }

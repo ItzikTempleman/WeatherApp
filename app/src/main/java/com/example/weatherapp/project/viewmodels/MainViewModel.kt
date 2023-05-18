@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.project.models.forecast.ForecastResponse
+import com.example.weatherapp.project.models.unsplash_location_image.UnsplashImageResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.repositories.RepositoryImp
 import com.example.weatherapp.project.view.toggleProgressBar
@@ -64,7 +65,7 @@ class MainViewModel
             if (forecastResponse.isSuccessful) {
                 val forecastResponseBody = forecastResponse.body()
                 if (forecastResponseBody != null) {
-                   Log.d("TG", "response: ${forecastResponseBody.city}")
+                    Log.d("TG", "response: ${forecastResponseBody.city}")
                     emit(forecastResponseBody)
                 } else Log.d(
                     "TAG", "second forecast failure message: " + forecastResponse.message()
@@ -76,26 +77,48 @@ class MainViewModel
         return forecastFlow
     }
 
-    fun getImageResponse( cityImage: String): Flow<String> {
+    fun getImageResponse(cityImage: String): Flow<String> {
         val imageResponseFlow: Flow<String> = flow {
             val imageResponse = repositoryImp.getLocationImage(cityImage)
             if (imageResponse.isSuccessful) {
                 val imageResponseBody = imageResponse.body()
                 if (imageResponseBody != null) {
-                   val image=imageResponseBody.cityResponse.resultResponse.results[4].image.photo.photoSizes.last().url
+                    val image =
+                        imageResponseBody.cityResponse.resultResponse.results[3].image.photo.photoSizes[4].url
                     emit(image)
                 } else Log.d(
-                    "TAG", "second forecast failure message: " + imageResponse.message()
+                    "TAG", "second image failure message: " + imageResponse.message()
                 )
                 return@flow
-            } else Log.d("TAG", "first forecast failure message: " + imageResponse.message())
+            } else Log.d("TAG", "first image failure message: " + imageResponse.message())
             return@flow
         }
         return imageResponseFlow
     }
 
-}
 
+    fun getImagesFromUnsplash(city: String, clientId: String): Flow<UnsplashImageResponse> {
+
+        val unsplashImageList: Flow<UnsplashImageResponse> = flow {
+            val unsplashImageResponse =
+                repositoryImp.getLocationImageFromUnsplashApi(city, clientId)
+            if (unsplashImageResponse.isSuccessful) {
+                val unsplashImageListBody = unsplashImageResponse.body()
+                if (unsplashImageListBody != null) {
+                    emit(unsplashImageListBody)
+                } else Log.d(
+                    "TAG", "second image list failure message: " + unsplashImageResponse.message()
+                )
+                return@flow
+            } else Log.d(
+                "TAG",
+                "first  image list message: " + unsplashImageResponse.message()
+            )
+            return@flow
+        }
+        return unsplashImageList
+    }
+}
 
 
 
