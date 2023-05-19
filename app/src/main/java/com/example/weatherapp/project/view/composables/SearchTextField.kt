@@ -65,7 +65,7 @@ fun SearchTextField(
                     text = stringResource(id = R.string.search),
                     style = TextStyle(
                         fontSize = 24.sp,
-                        color = colorResource(id = R.color.lighter_grey_2)
+                        color = colorResource(id = R.color.grey)
                     )
                 )
             },
@@ -80,7 +80,7 @@ fun SearchTextField(
                 cursorColor = colorResource(R.color.black),
                 textColor = colorResource(R.color.black),
                 disabledTextColor = colorResource(R.color.transparent),
-                backgroundColor = colorResource(R.color.transparent),
+                backgroundColor = colorResource(R.color.lighter_grey_2),
                 focusedIndicatorColor = colorResource(R.color.transparent),
                 unfocusedIndicatorColor = colorResource(R.color.transparent),
                 disabledIndicatorColor = colorResource(R.color.transparent),

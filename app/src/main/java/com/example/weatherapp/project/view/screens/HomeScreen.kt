@@ -14,23 +14,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.BaseApplication
 import com.example.weatherapp.project.models.forecast.ForecastResponse
+import com.example.weatherapp.project.models.unsplash_location_image.UnsplashImageResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
+import com.example.weatherapp.project.utils.Constants.UNSPLASH_CLIENT_ID
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
-import com.example.weatherapp.project.view.layouts.BasicWeatherData
-import com.example.weatherapp.project.view.layouts.ForecastLayout
-import com.example.weatherapp.project.view.layouts.WindAndHumidity
+import com.example.weatherapp.project.view.layouts.DataLayout
 import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -39,12 +36,10 @@ import kotlinx.coroutines.launch
 var isCurrentLocation = mutableStateOf(true)
 var isSearched = mutableStateOf(false)
 var weatherModel = WeatherResponse.getMockObj()
-var imageModel = ""
 var forecastModel = ForecastResponse.getForecastMockObj()
 var isProgressBarVisible = mutableStateOf(false)
+var imagesList = UnsplashImageResponse.getMockObj()
 
-
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun HomeScreen(
     mainViewModel: MainViewModel,
@@ -68,7 +63,7 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
+        val (progressbar, searchET, location, imageLazyRow) = createRefs()
 
 
 
@@ -85,40 +80,15 @@ fun HomeScreen(
             searchGoogleMapsResult = searchGoogleMapsResult
         )
 
-
         if (isSearched.value) {
             isCurrentLocation.value=false
-            val backgroundImagePainter = rememberImagePainter(data = imageModel)
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = backgroundImagePainter,
-                contentDescription = "location_background_image",
-                contentScale = ContentScale.FillHeight
-            )
 
-            BasicWeatherData(
+            DataLayout(
                 weatherModel = weatherModel, modifier = Modifier
-                    .constrainAs(mainLayout) {
+                    .constrainAs(imageLazyRow) {
                         top.linkTo(searchET.bottom)
+                        bottom.linkTo(parent.bottom)
                     }
-                    .padding(top = 50.dp)
-
-            )
-
-            WindAndHumidity(
-                weatherData = weatherModel, modifier = Modifier
-                    .constrainAs(conditionLayout) {
-                        top.linkTo(mainLayout.bottom)
-                    }
-                    .padding(top = 50.dp)
-            )
-
-            ForecastLayout(
-                forecastData = forecastModel, modifier = Modifier
-                    .constrainAs(forecastLayout) {
-                        bottom.linkTo(location.top)
-                    }
-                    .height(225.dp)
             )
         }
 
@@ -188,11 +158,10 @@ fun search(
                     .collect { forecastIt ->
                         forecastModel = forecastIt
                         isSearched.value = true
-                        mainViewModel.getImageResponse(cityName)
-                            .collect { imageIt ->
-                                imageModel = imageIt
-                                Log.d("TAG_IMG", "image url: $imageModel")
-                            }
+                        mainViewModel.getImagesFromUnsplash(cityName,UNSPLASH_CLIENT_ID).collect{imageIt->
+                            imagesList=imageIt
+                            Log.d("TAG_IM", "images: $imagesList")
+                        }
                     }
             }
     }

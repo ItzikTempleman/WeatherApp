@@ -6,8 +6,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class UnsplashImageResponse(
-    val results: List<ResulItem>
-) : Parcelable
+    val results: List<ResulItem> = emptyList()
+) : Parcelable{
+    companion object {
+        fun getMockObj() =UnsplashImageResponse()
+    }
+}
 
 
 @Parcelize
