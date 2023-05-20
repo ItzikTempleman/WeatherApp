@@ -22,10 +22,10 @@ import coil.compose.rememberImagePainter
 import com.example.weatherapp.R
 import com.example.weatherapp.project.models.forecast.ForecastItem
 import com.example.weatherapp.project.models.forecast.ForecastResponse
+import com.example.weatherapp.project.utils.convertFromKelvinToCelsius
 import com.example.weatherapp.project.utils.getDate
 import com.example.weatherapp.project.utils.getDayOfWeek
 import com.example.weatherapp.project.utils.getHourOfDay
-import com.example.weatherapp.project.utils.convertFromKelvinToCelsius
 
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -153,8 +153,8 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
         Image(
             modifier = Modifier
                 .constrainAs(precipitationIcon) {
-                    bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
+                    top.linkTo(description.bottom)
                 }
                 .height(26.dp)
                 .width(26.dp),
@@ -162,7 +162,8 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
             contentDescription = "rain"
         )
         Text(
-            modifier = Modifier.padding(start = 4.dp)
+            modifier = Modifier
+                .padding(start = 4.dp)
                 .constrainAs(precipitation) {
                     end.linkTo(parent.end)
                     bottom.linkTo(precipitationIcon.bottom)

@@ -1,15 +1,15 @@
-package com.example.weatherapp.project.models.unsplash_location_image
+package com.example.weatherapp.project.models.location_images
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class UnsplashImageResponse(
-    val results: List<ResulItem> = emptyList()
+data class ImageResponse(
+    val results: List<ResulItem>
 ) : Parcelable{
     companion object {
-        fun getMockObj() =UnsplashImageResponse()
+        fun getMockObj() =ImageResponse(emptyList())
     }
 }
 

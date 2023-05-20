@@ -2,13 +2,12 @@ package com.example.weatherapp.project.utils
 
 object Constants  {
     const val BASE_URL = "https://open-weather13.p.rapidapi.com/"
-    const val IMAGE_BASE_URL = "https://travel-advisor.p.rapidapi.com/"
-    const val UNSPLASH_IMAGE_BASE_URL = "https://api.unsplash.com/"
-    const val UNSPLASH_CLIENT_ID = "0K521ZLZdskr0RQF9bmAGJemUeG7SMd_4eEc1cPirbc"
+
+    const val IMAGE_BASE_URL = "https://api.unsplash.com/"
+    const val IMAGE_CLIENT_ID = "0K521ZLZdskr0RQF9bmAGJemUeG7SMd_4eEc1cPirbc"
 
     const val API_KEY_NAME = "x-rapidapi-key"
     const val API_KEY_VALUE = "370f715c6cmsh2aedaf88c0ad5bcp1aafa4jsncf895a26cb42"
-    const val IMAGE_HOST_VALUE = "travel-advisor.p.rapidapi.com"
 
 
     const val API_HOST_NAME = "x-rapidapi-host"

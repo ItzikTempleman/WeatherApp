@@ -20,6 +20,7 @@
 
     <color name="full_transparent">#00EAEAEA</color>
     <color name="transparent">#00EAEAEA</color>
+    <color name="almost_transparent">#34FFFFFF</color>
     <color name="semi_transparent">#74FFFFFF</color>
     <color name="grey">#454545</color>
     <color name="lighter_grey">#A8A7A7</color>

@@ -18,7 +18,7 @@ import com.example.weatherapp.project.utils.convertFromFahrenheitToCelsius
 import com.example.weatherapp.project.utils.getFullCountryName
 
 @Composable
-fun BasicWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
+fun TopWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
 
     ConstraintLayout(
         modifier = modifier

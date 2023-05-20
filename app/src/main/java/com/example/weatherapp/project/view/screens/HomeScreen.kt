@@ -2,32 +2,35 @@ package com.example.weatherapp.project.view.screens
 
 
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil.annotation.ExperimentalCoilApi
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.BaseApplication
 import com.example.weatherapp.project.models.forecast.ForecastResponse
-import com.example.weatherapp.project.models.unsplash_location_image.UnsplashImageResponse
+import com.example.weatherapp.project.models.location_images.ImageResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
-import com.example.weatherapp.project.utils.Constants.UNSPLASH_CLIENT_ID
+import com.example.weatherapp.project.utils.Constants.IMAGE_CLIENT_ID
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
-import com.example.weatherapp.project.view.layouts.DataLayout
+import com.example.weatherapp.project.view.layouts.*
 import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -35,11 +38,15 @@ import kotlinx.coroutines.launch
 
 var isCurrentLocation = mutableStateOf(true)
 var isSearched = mutableStateOf(false)
+var isProgressBarVisible = mutableStateOf(false)
+
+
 var weatherModel = WeatherResponse.getMockObj()
 var forecastModel = ForecastResponse.getForecastMockObj()
-var isProgressBarVisible = mutableStateOf(false)
-var imagesList = UnsplashImageResponse.getMockObj()
+var imagesList = ImageResponse.getMockObj()
 
+
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun HomeScreen(
     mainViewModel: MainViewModel,
@@ -48,6 +55,7 @@ fun HomeScreen(
 ) {
 
     val coroutineScope = rememberCoroutineScope()
+
 
     toggleProgressBar(true)
     mainViewModel.getCityNameLiveData().observe(LocalLifecycleOwner.current){ cityName ->
@@ -63,7 +71,7 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (progressbar, searchET, location, imageLazyRow) = createRefs()
+        val (progressbar, searchET, location,  mainLayout, conditionLayout, forecastLayout, imageLazyRow) = createRefs()
 
 
 
@@ -81,15 +89,45 @@ fun HomeScreen(
         )
 
         if (isSearched.value) {
-            isCurrentLocation.value=false
+            isCurrentLocation.value = false
 
-            DataLayout(
-                weatherModel = weatherModel, modifier = Modifier
+            ImageLayout(
+                modifier = Modifier
                     .constrainAs(imageLazyRow) {
                         top.linkTo(searchET.bottom)
                         bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .clip(RoundedCornerShape(12.dp)),
+                images = imagesList
+            )
+
+            TopWeatherData(
+                weatherModel = weatherModel, modifier = Modifier
+                    .constrainAs(mainLayout) {
+                        top.linkTo(searchET.bottom)
+                    }
+                    .padding(top = 50.dp)
+
+            )
+
+            WindAndHumidity(
+                weatherData = weatherModel, modifier = Modifier
+                    .constrainAs(conditionLayout) {
+                        top.linkTo(mainLayout.bottom)
+                    }
+                    .padding(top = 50.dp)
+            )
+
+            ForecastLayout(
+                forecastData = forecastModel, modifier = Modifier.background(colorResource(id = R.color.almost_transparent))
+                    .constrainAs(forecastLayout) {
+                        top.linkTo(conditionLayout.bottom)
+                        bottom.linkTo(parent.bottom)
                     }
             )
+
         }
 
         Surface(
@@ -142,6 +180,7 @@ fun HomeScreen(
     }
 }
 
+
 fun search(
     coroutineScope: CoroutineScope,
     mainViewModel: MainViewModel,
@@ -157,19 +196,13 @@ fun search(
                 )
                     .collect { forecastIt ->
                         forecastModel = forecastIt
-                        isSearched.value = true
-                        mainViewModel.getImagesFromUnsplash(cityName,UNSPLASH_CLIENT_ID).collect{imageIt->
-                            imagesList=imageIt
-                            Log.d("TAG_IM", "images: $imagesList")
+
+                        mainViewModel.getImages(cityName, IMAGE_CLIENT_ID).collect {
+                            imagesList = it
+                            isSearched.value = true
+
                         }
                     }
             }
     }
 }
-
-
-
-
-
-
-
