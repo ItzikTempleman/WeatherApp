@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,6 +34,7 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
 
             val firstWeatherOrNull = weatherData.weather.firstOrNull()
             val painter = rememberImagePainter(data = firstWeatherOrNull?.getImage())
+            val offset = Offset(4.0f, 4.0f)
 
             Image(
                 modifier = Modifier
@@ -44,6 +49,7 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 contentDescription = "wind_icon"
             )
             Text(
+                color = Color.White,
                 modifier = Modifier
                     .constrainAs(windSpeedValue) {
                         top.linkTo(windSpeedIcon.bottom)
@@ -52,7 +58,12 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                     },
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                text = convertFromMilesToKm(weatherData.wind.speed).toInt().toString() + " km/h"
+                text = convertFromMilesToKm(weatherData.wind.speed).toInt().toString() + " km/h",
+                style = TextStyle(
+                    shadow = Shadow(
+                        color = Color.Black, offset = offset, blurRadius = 4f
+                    )
+                )
             )
 
 
@@ -69,7 +80,7 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 painter = painter,
                 contentDescription = "condition_icon"
             )
-            Text(
+            Text( color = Color.White,
                 modifier = Modifier
                     .constrainAs(conditionText) {
                         top.linkTo(windSpeedValue.top)
@@ -80,6 +91,12 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 text = capitalizeDesc(weatherData.weather[0].description)
+                ,
+                style = TextStyle(
+                    shadow = Shadow(
+                        color = Color.Black, offset = offset, blurRadius = 4f
+                    )
+                )
             )
             Image(
                 modifier = Modifier
@@ -95,7 +112,7 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 contentDescription = "humidity_icon"
             )
 
-            Text(
+            Text( color = Color.White,
                 modifier = Modifier
                     .constrainAs(humidityValue) {
                         start.linkTo(conditionIcon.end)
@@ -106,6 +123,12 @@ fun WindAndHumidity(weatherData: WeatherResponse, modifier: Modifier) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 text = weatherData.main.humidity.toString()
+                ,
+                style = TextStyle(
+                    shadow = Shadow(
+                        color = Color.Black, offset = offset, blurRadius = 4f
+                    )
+                )
             )
         }
     }

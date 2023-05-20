@@ -10,8 +10,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,8 +63,8 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
         val firstForecastOrNull = forecast.weatherInForecast.firstOrNull()
         val painter = rememberImagePainter(data = firstForecastOrNull?.getForecastImage())
         createHorizontalChain(precipitationIcon, precipitation, chainStyle = ChainStyle.Packed)
-
-        Text(
+        val offset = Offset(5.0f, 5.0f)
+        Text( color = Color.White,
             modifier = Modifier
 
                 .constrainAs(dayOfWeek) {
@@ -70,9 +74,15 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
                 },
             text = getDayOfWeek(forecast.exactTime),
             fontSize = 18.sp
+            ,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black, offset = offset, blurRadius = 4f
+                )
+            )
         )
 
-        Text(
+        Text( color = Color.White,
             modifier = Modifier
 
                 .constrainAs(date) {
@@ -82,9 +92,15 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
                 },
             text = getDate(forecast.exactTime),
             fontSize = 18.sp
+            ,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black, offset = offset, blurRadius = 4f
+                )
+            )
         )
 
-        Text(
+        Text( color = Color.White,
             modifier = Modifier
 
                 .constrainAs(hour) {
@@ -95,9 +111,15 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
             text = getHourOfDay(forecast.exactTime),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
+            ,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black, offset = offset, blurRadius = 4f
+                )
+            )
         )
 
-        Text(
+        Text( color = Color.White,
             modifier = Modifier
 
                 .constrainAs(degrees) {
@@ -108,11 +130,16 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
             text = convertFromKelvinToCelsius(forecast.main.temp).toInt().toString(),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
-
+            ,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black, offset = offset, blurRadius = 4f
+                )
+            )
             )
 
 
-        Text(
+        Text( color = Color.White,
             modifier = Modifier
                 .padding(2.dp)
                 .constrainAs(degreesPercent) {
@@ -121,7 +148,13 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
                 },
             text = "o",
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Bold
+            ,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black, offset = offset, blurRadius = 4f
+                )
+            )
         )
 
 
@@ -139,7 +172,7 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
             painter = painter,
                 contentDescription = "forecast_icon"
             )
-        Text(
+        Text( color = Color.White,
             modifier = Modifier
                 .constrainAs(description) {
                     top.linkTo(icon.bottom)
@@ -148,6 +181,12 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
                 },
             text = forecast.weatherInForecast.first().description,
             fontSize = 16.sp
+            ,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black, offset = offset, blurRadius = 4f
+                )
+            )
         )
 
         Image(
@@ -161,7 +200,7 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
             painter = painterResource(R.drawable.precipitation),
             contentDescription = "rain"
         )
-        Text(
+        Text( color = Color.White,
             modifier = Modifier
                 .padding(start = 4.dp)
                 .constrainAs(precipitation) {
@@ -172,6 +211,12 @@ fun ForecastItem(forecast: ForecastItem, modifier: Modifier) {
                 },
             text = if(forecast.rain?.threeHours.toString()!="null") "${forecast.rain?.threeHours} MM" else "no rain",
             fontSize = 14.sp
+            ,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black, offset = offset, blurRadius = 4f
+                )
+            )
         )
         }
     }

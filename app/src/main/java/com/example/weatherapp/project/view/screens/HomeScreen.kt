@@ -5,23 +5,19 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil.annotation.ExperimentalCoilApi
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.BaseApplication
 import com.example.weatherapp.project.models.forecast.ForecastResponse
@@ -30,7 +26,10 @@ import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.utils.Constants.IMAGE_CLIENT_ID
 import com.example.weatherapp.project.view.ProgressBar
 import com.example.weatherapp.project.view.composables.SearchTextField
-import com.example.weatherapp.project.view.layouts.*
+import com.example.weatherapp.project.view.layouts.ForecastLayout
+import com.example.weatherapp.project.view.layouts.ImageLayout
+import com.example.weatherapp.project.view.layouts.TopWeatherData
+import com.example.weatherapp.project.view.layouts.WindAndHumidity
 import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +45,7 @@ var forecastModel = ForecastResponse.getForecastMockObj()
 var imagesList = ImageResponse.getMockObj()
 
 
-@OptIn(ExperimentalCoilApi::class)
+
 @Composable
 fun HomeScreen(
     mainViewModel: MainViewModel,
@@ -99,7 +98,7 @@ fun HomeScreen(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
-                    .clip(RoundedCornerShape(12.dp)),
+                   ,
                 images = imagesList
             )
 
@@ -117,11 +116,11 @@ fun HomeScreen(
                     .constrainAs(conditionLayout) {
                         top.linkTo(mainLayout.bottom)
                     }
-                    .padding(top = 50.dp)
+                    .padding(vertical = 20.dp)
             )
 
             ForecastLayout(
-                forecastData = forecastModel, modifier = Modifier.background(colorResource(id = R.color.almost_transparent))
+                forecastData = forecastModel, modifier = Modifier
                     .constrainAs(forecastLayout) {
                         top.linkTo(conditionLayout.bottom)
                         bottom.linkTo(parent.bottom)
