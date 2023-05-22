@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.weatherapp.R
 import com.example.weatherapp.project.main.BaseApplication
@@ -39,11 +40,9 @@ var isCurrentLocation = mutableStateOf(true)
 var isSearched = mutableStateOf(false)
 var isProgressBarVisible = mutableStateOf(false)
 
-
 var weatherModel = WeatherResponse.getMockObj()
 var forecastModel = ForecastResponse.getForecastMockObj()
 var imagesList = ImageResponse.getMockObj()
-
 
 
 @Composable
@@ -70,12 +69,13 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (progressbar, searchET, location,  mainLayout, conditionLayout, forecastLayout, imageLazyRow) = createRefs()
+        val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
 
 
 
         SearchTextField(
             modifier = Modifier
+                .zIndex(2f)
                 .padding(8.dp)
                 .fillMaxWidth()
                 .constrainAs(searchET) {
@@ -90,17 +90,7 @@ fun HomeScreen(
         if (isSearched.value) {
             isCurrentLocation.value = false
 
-            ImageLayout(
-                modifier = Modifier
-                    .constrainAs(imageLazyRow) {
-                        top.linkTo(searchET.bottom)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                   ,
-                images = imagesList
-            )
+            ImageLayout(images = imagesList, modifier = Modifier.fillMaxSize())
 
             TopWeatherData(
                 weatherModel = weatherModel, modifier = Modifier
@@ -157,7 +147,9 @@ fun HomeScreen(
                 }
             ) {
                 Image(
-                    painter = if(!isCurrentLocation.value) painterResource(R.drawable.gps_no_location) else painterResource(R.drawable.gps_location) ,
+                    painter = if (!isCurrentLocation.value) painterResource(R.drawable.gps_location) else painterResource(
+                        R.drawable.gps_no_location
+                    ),
                     contentDescription = "location",
                     modifier = Modifier.size(24.dp)
                 )
@@ -199,7 +191,7 @@ fun search(
                         mainViewModel.getImages(cityName, IMAGE_CLIENT_ID).collect {
                             imagesList = it
                             isSearched.value = true
-
+                            isCurrentLocation.value = false
                         }
                     }
             }
