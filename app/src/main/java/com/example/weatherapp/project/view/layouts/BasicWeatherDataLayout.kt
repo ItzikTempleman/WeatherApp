@@ -2,6 +2,8 @@ package com.example.weatherapp.project.view.layouts
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,6 +11,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -20,17 +23,26 @@ import com.example.weatherapp.R
 import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.utils.convertFromFahrenheitToCelsius
 import com.example.weatherapp.project.utils.getFullCountryName
+import com.example.weatherapp.project.view.composables.FloatingButtons
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun TopWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
+fun TopWeatherData(
+    coroutineScope: CoroutineScope,
+    listState: LazyListState,
+    weatherModel: WeatherResponse,
+    modifier: Modifier
+) {
 
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
             .padding(6.dp)
     ) {
-        val (cityNameText, countryNameText, temperature, mainDegreesIcon, feelsLike, lowLayout, highLayout) = createRefs()
-        createHorizontalChain(lowLayout,feelsLike, highLayout, chainStyle = ChainStyle.Spread)
+        val (cityNameText, countryNameText, temperature, mainDegreesIcon, feelsLike, lowLayout, highLayout,
+            next, back) = createRefs()
+        createHorizontalChain(lowLayout, feelsLike, highLayout, chainStyle = ChainStyle.Spread)
 
         val offset = Offset(4.0f, 4.0f)
 
@@ -71,7 +83,8 @@ fun TopWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
 
         Text(
             color = Color.White,
-            modifier = Modifier.padding(top = 30.dp)
+            modifier = Modifier
+                .padding(top = 30.dp)
                 .constrainAs(temperature) {
                     top.linkTo(countryNameText.bottom)
                     start.linkTo(parent.start)
@@ -88,7 +101,8 @@ fun TopWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
 
         Text(
             color = Color.White,
-            modifier = Modifier.padding(top = 30.dp)
+            modifier = Modifier
+                .padding(top = 30.dp)
                 .constrainAs(mainDegreesIcon) {
                     top.linkTo(temperature.top)
                     start.linkTo(temperature.end)
@@ -101,9 +115,53 @@ fun TopWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
                 )
             )
         )
+        FloatingButtons(
+            listState = listState,
+            coroutineScope = coroutineScope,
+            modifier = Modifier
+                .constrainAs(next) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    end.linkTo(parent.end)
+                }
+                .padding(4.dp),
+            floatingButtonModifier = Modifier,
+            imageModifier = Modifier.size(36.dp),
+            shape = CircleShape,
+            elevation = 20.dp,
+            backgroundColor = colorResource(id = R.color.light_grey),
+            onClick = {
 
+                moveNext(true, coroutineScope, listState)
+            },
+            contentDescription = "next",
+            painter = painterResource(id = R.drawable.next_image)
+        )
+
+        FloatingButtons(
+            listState = listState,
+            coroutineScope = coroutineScope,
+            modifier = Modifier
+                .constrainAs(back) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                }
+                .padding(4.dp),
+            floatingButtonModifier = Modifier,
+            imageModifier = Modifier.size(36.dp),
+            shape = CircleShape,
+            elevation = 20.dp,
+            backgroundColor = colorResource(id = R.color.light_grey),
+            onClick = {
+                moveNext(false, coroutineScope, listState)
+            },
+            contentDescription = "back",
+            painter = painterResource(id = R.drawable.previous_image)
+        )
         Row(
-            modifier = Modifier.padding(top = 30.dp)
+            modifier = Modifier
+                .padding(top = 30.dp)
                 .constrainAs(lowLayout) {
                     top.linkTo(temperature.bottom)
                     start.linkTo(parent.start)
@@ -158,7 +216,8 @@ fun TopWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
         }
 
         Row(
-            modifier = Modifier.padding(top = 30.dp)
+            modifier = Modifier
+                .padding(top = 30.dp)
                 .constrainAs(feelsLike) {
                     top.linkTo(temperature.bottom)
                     start.linkTo(parent.start)
@@ -194,7 +253,8 @@ fun TopWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
         }
 
         Row(
-            modifier = Modifier.padding(top = 30.dp)
+            modifier = Modifier
+                .padding(top = 30.dp)
                 .constrainAs(highLayout) {
                     top.linkTo(temperature.bottom)
                     end.linkTo(parent.end)
@@ -244,6 +304,16 @@ fun TopWeatherData(weatherModel: WeatherResponse, modifier: Modifier) {
                     )
                 )
             )
+        }
+    }
+}
+
+fun moveNext(isNext: Boolean, coroutineScope: CoroutineScope, listState: LazyListState) {
+    coroutineScope.launch {
+        if (isNext) {
+        listState.animateScrollToItem(3)
+        } else {
+            listState.animateScrollToItem(2)
         }
     }
 }

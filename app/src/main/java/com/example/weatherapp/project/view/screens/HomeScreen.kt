@@ -4,11 +4,9 @@ package com.example.weatherapp.project.view.screens
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,6 +24,7 @@ import com.example.weatherapp.project.models.location_images.ImageResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.utils.Constants.IMAGE_CLIENT_ID
 import com.example.weatherapp.project.view.ProgressBar
+import com.example.weatherapp.project.view.composables.FloatingButtons
 import com.example.weatherapp.project.view.composables.SearchTextField
 import com.example.weatherapp.project.view.layouts.ForecastLayout
 import com.example.weatherapp.project.view.layouts.ImageLayout
@@ -51,7 +50,7 @@ fun HomeScreen(
     searchGoogleMapsResult: ActivityResultLauncher<Intent>,
     searchIntent: Intent
 ) {
-
+    val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -93,6 +92,8 @@ fun HomeScreen(
             ImageLayout(images = imagesList, modifier = Modifier.fillMaxSize())
 
             TopWeatherData(
+                coroutineScope=coroutineScope,
+                listState=listState,
                 weatherModel = weatherModel, modifier = Modifier
                     .constrainAs(mainLayout) {
                         top.linkTo(searchET.bottom)
@@ -119,7 +120,7 @@ fun HomeScreen(
 
         }
 
-        Surface(
+        FloatingButtons(
             modifier = Modifier
                 .constrainAs(location) {
                     end.linkTo(parent.end)
@@ -127,34 +128,37 @@ fun HomeScreen(
                 }
                 .size(80.dp)
                 .padding(16.dp),
+            floatingButtonModifier = Modifier,
+            imageModifier = Modifier.size(24.dp),
             shape = CircleShape,
-            elevation = 20.dp
-        ) {
-            FloatingActionButton(
-                backgroundColor = colorResource(id = R.color.white),
-                modifier = Modifier,
-                onClick = {
-                    isCurrentLocation.value=true
-                    toggleProgressBar(true)
-                    if (mainViewModel.getCityNameLiveData().value?.isEmpty() == true){
-                        Toast
-                            .makeText(BaseApplication.getInstance().applicationContext, "No Location permission granted!", Toast.LENGTH_SHORT)
-                            .show()
-                        toggleProgressBar()
-                    }else{
-                        search(coroutineScope, mainViewModel, mainViewModel.getCityNameLiveData().value ?: return@FloatingActionButton)
-                    }
+            elevation = 20.dp,
+            backgroundColor = colorResource(id = R.color.white),
+            onClick = {
+                isCurrentLocation.value = true
+                toggleProgressBar(true)
+                if (mainViewModel.getCityNameLiveData().value?.isEmpty() == true) {
+                    Toast
+                        .makeText(
+                            BaseApplication.getInstance().applicationContext,
+                            "No Location permission granted!",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
+                    toggleProgressBar()
+                } else {
+                    search(
+                        coroutineScope,
+                        mainViewModel,
+                        mainViewModel.getCityNameLiveData().value ?: return@FloatingButtons
+                    )
                 }
-            ) {
-                Image(
-                    painter = if (!isCurrentLocation.value) painterResource(R.drawable.gps_location) else painterResource(
-                        R.drawable.gps_no_location
-                    ),
-                    contentDescription = "location",
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
+            },
+            contentDescription = "location",
+            painter = if (!isCurrentLocation.value) painterResource(R.drawable.gps_location) else painterResource(
+                R.drawable.gps_no_location
+            )
+        )
+
 
         ProgressBar(
             modifier = Modifier
@@ -170,7 +174,6 @@ fun HomeScreen(
         )
     }
 }
-
 
 fun search(
     coroutineScope: CoroutineScope,
