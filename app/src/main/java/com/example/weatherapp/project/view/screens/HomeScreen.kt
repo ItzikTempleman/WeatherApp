@@ -4,6 +4,7 @@ package com.example.weatherapp.project.view.screens
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -63,19 +65,21 @@ fun HomeScreen(
 
     search(coroutineScope, mainViewModel)
 
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout) = createRefs()
-
-
-
+        val (progressbar, searchET, location, mainLayout, conditionLayout, forecastLayout, imageLayout) = createRefs()
+Image(
+    modifier = Modifier.fillMaxSize(),
+    painter = painterResource(id = R.drawable.background),
+    contentDescription ="wallpaper",
+    contentScale = ContentScale.FillHeight
+)
         SearchTextField(
             modifier = Modifier
                 .zIndex(2f)
-                .padding(8.dp)
+                .padding(4.dp)
                 .fillMaxWidth()
                 .constrainAs(searchET) {
                     top.linkTo(parent.top)
@@ -89,7 +93,15 @@ fun HomeScreen(
         if (isSearched.value) {
             isCurrentLocation.value = false
 
-            ImageLayout(images = imagesList, modifier = Modifier.fillMaxSize())
+            ImageLayout(images = imagesList, modifier = Modifier
+                .constrainAs(imageLayout){
+                    top.linkTo(searchET.bottom)
+                    end.linkTo(parent.end)
+                    start.linkTo(parent.start)
+                    bottom.linkTo(forecastLayout.top)
+                }
+
+            )
 
             TopWeatherData(
                 coroutineScope=coroutineScope,

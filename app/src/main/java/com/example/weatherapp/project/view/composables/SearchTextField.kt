@@ -87,7 +87,7 @@ fun SearchTextField(
                 focusedLabelColor=colorResource(R.color.transparent)
             ),
             singleLine = true,
-            shape = RoundedCornerShape(8.dp),
+            shape = RoundedCornerShape(14.dp),
             keyboardOptions = KeyboardOptions.Default.copy(
                 capitalization = KeyboardCapitalization.Characters,
                 autoCorrect = false,
