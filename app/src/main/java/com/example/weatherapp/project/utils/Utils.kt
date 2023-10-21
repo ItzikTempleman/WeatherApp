@@ -1,6 +1,6 @@
 package com.example.weatherapp.project.utils
 
-import com.example.weatherapp.project.ui.composables.toggleProgressBar
+import com.example.weatherapp.project.view.toggleProgressBar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.*

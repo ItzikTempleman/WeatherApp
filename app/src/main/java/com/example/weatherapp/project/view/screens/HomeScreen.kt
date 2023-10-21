@@ -1,14 +1,11 @@
-package com.example.weatherapp.project.ui.screens
+package com.example.weatherapp.project.view.screens
 
 
+import android.content.Intent
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -27,15 +24,15 @@ import com.example.weatherapp.project.main.BaseApplication
 import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.location_images.ImageResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
-import com.example.weatherapp.project.ui.composables.FloatingButtons
-import com.example.weatherapp.project.ui.composables.ProgressBar
-import com.example.weatherapp.project.ui.composables.SearchTextField
-import com.example.weatherapp.project.ui.composables.toggleProgressBar
-import com.example.weatherapp.project.ui.layouts.ForecastLayout
-import com.example.weatherapp.project.ui.layouts.ImageLayout
-import com.example.weatherapp.project.ui.layouts.TopWeatherData
-import com.example.weatherapp.project.ui.layouts.WindAndHumidity
 import com.example.weatherapp.project.utils.Constants.IMAGE_CLIENT_ID
+import com.example.weatherapp.project.view.ProgressBar
+import com.example.weatherapp.project.view.composables.FloatingButtons
+import com.example.weatherapp.project.view.composables.SearchTextField
+import com.example.weatherapp.project.view.layouts.ForecastLayout
+import com.example.weatherapp.project.view.layouts.ImageLayout
+import com.example.weatherapp.project.view.layouts.TopWeatherData
+import com.example.weatherapp.project.view.layouts.WindAndHumidity
+import com.example.weatherapp.project.view.toggleProgressBar
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -51,13 +48,15 @@ var imagesList = ImageResponse.getMockObj()
 
 @Composable
 fun HomeScreen(
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    searchGoogleMapsResult: ActivityResultLauncher<Intent>,
+    searchIntent: Intent
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    toggleProgressBar(true)
 
+    toggleProgressBar(true)
     mainViewModel.getCityNameLiveData().observe(LocalLifecycleOwner.current){ cityName ->
         if (cityName.isNotEmpty()){
             search(coroutineScope, mainViewModel, cityName)
@@ -86,7 +85,9 @@ Image(
                     top.linkTo(parent.top)
                 },
             coroutineScope = coroutineScope,
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            searchIntent = searchIntent,
+            searchGoogleMapsResult = searchGoogleMapsResult
         )
 
         if (isSearched.value) {

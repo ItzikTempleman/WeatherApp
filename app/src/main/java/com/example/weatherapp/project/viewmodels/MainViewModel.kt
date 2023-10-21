@@ -9,7 +9,7 @@ import com.example.weatherapp.project.models.forecast.ForecastResponse
 import com.example.weatherapp.project.models.location_images.ImageResponse
 import com.example.weatherapp.project.models.weather.WeatherResponse
 import com.example.weatherapp.project.repositories.RepositoryImp
-import com.example.weatherapp.project.ui.composables.toggleProgressBar
+import com.example.weatherapp.project.view.toggleProgressBar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -82,7 +82,8 @@ class MainViewModel
     fun getImages(city: String, clientId: String): Flow<ImageResponse> {
 
         val imageList: Flow<ImageResponse> = flow {
-            val imageResponse = repositoryImp.getLocationImage(city, clientId)
+            val imageResponse =
+                repositoryImp.getLocationImage(city, clientId)
             if (imageResponse.isSuccessful) {
                 val unsplashImageListBody = imageResponse.body()
                 if (unsplashImageListBody != null) {

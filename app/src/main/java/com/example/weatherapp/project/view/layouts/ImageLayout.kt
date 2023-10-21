@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.ui.layouts
+package com.example.weatherapp.project.view.layouts
 
 import android.util.Log
 import androidx.compose.foundation.Image
