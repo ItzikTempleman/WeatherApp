@@ -10,7 +10,7 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:name=".project.main.BaseApplication"
+        android:name="com.itzik.weatherapp.project.main.BaseApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -19,11 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherApp"
-        tools:targetApi="34">
+        tools:targetApi="33">
 
         <activity
             android:windowSoftInputMode="adjustPan"
-            android:name=".project.main.MainActivity"
+            android:name="com.itzik.weatherapp.project.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.WeatherApp">
             <intent-filter>
