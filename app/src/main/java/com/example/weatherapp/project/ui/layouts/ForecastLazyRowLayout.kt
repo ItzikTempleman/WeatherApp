@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.view.layouts
+package com.example.weatherapp.project.ui.layouts
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -45,6 +45,7 @@ fun ForecastLayout(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
+
         items(items = forecastData.updatedHourlyList(), itemContent = {
             ForecastItem(it, modifier)
         })

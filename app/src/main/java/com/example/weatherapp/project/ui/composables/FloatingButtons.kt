@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.view.composables
+package com.example.weatherapp.project.ui.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.LazyListState

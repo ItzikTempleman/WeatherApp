@@ -1,10 +1,6 @@
-package com.example.weatherapp.project.view.composables
+package com.example.weatherapp.project.ui.composables
 
 
-import android.content.Intent
-import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,7 +8,11 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -23,8 +23,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.R
-import com.example.weatherapp.project.view.screens.search
-import com.example.weatherapp.project.view.toggleProgressBar
+import com.example.weatherapp.project.ui.screens.search
 import com.example.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -35,31 +34,16 @@ fun SearchTextField(
     coroutineScope: CoroutineScope,
     mainViewModel: MainViewModel,
 
-    searchGoogleMapsResult: ActivityResultLauncher<Intent>,
-    searchIntent: Intent
 ) {
     var newChar by remember { mutableStateOf("") }
 
         TextField(
-            //TODO - Google autocomplete must pop up on clicking the Text Field
             value = newChar,
             onValueChange = {
-                //searchGoogleMapsResult.launch(searchIntent)
-//                //TODO "newChar" value is not connected  to the value of Google autocomplete input char
-//                if (newChar.length > 3) {
-//                    val resultName = Autocomplete.getPlaceFromIntent(searchIntent).name as String
-//
-//                    newChar = resultName
-//                } else
-                    newChar = it
+                newChar=it
             },
 
-            modifier = modifier
-                .clickable(
-                    onClick = {
-                        Log.d("TAGA", "clicked")
-                    }
-                ),
+            modifier = modifier,
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.search),

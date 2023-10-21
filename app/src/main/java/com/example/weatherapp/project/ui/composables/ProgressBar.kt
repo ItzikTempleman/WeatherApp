@@ -1,4 +1,4 @@
-package com.example.weatherapp.project.view
+package com.example.weatherapp.project.ui.composables
 
 import android.annotation.SuppressLint
 import androidx.compose.material.CircularProgressIndicator
@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import com.example.weatherapp.R
-import com.example.weatherapp.project.view.screens.isProgressBarVisible
+import com.example.weatherapp.project.ui.screens.isProgressBarVisible
 
 
 @SuppressLint("SuspiciousIndentation")
