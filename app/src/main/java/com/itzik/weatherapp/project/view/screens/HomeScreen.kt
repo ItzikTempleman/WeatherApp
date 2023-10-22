@@ -24,9 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.weatherapp.R
-import com.example.weatherapp.project.view.ProgressBar
-import com.example.weatherapp.project.view.toggleProgressBar
+import com.itzik.weatherapp.R
+import com.itzik.weatherapp.project.view.composables.ProgressBar
+import com.itzik.weatherapp.project.view.composables.toggleProgressBar
 import com.itzik.weatherapp.project.main.BaseApplication
 import com.itzik.weatherapp.project.models.forecast.ForecastResponse
 import com.itzik.weatherapp.project.models.location_images.ImageResponse

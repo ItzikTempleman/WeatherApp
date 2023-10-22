@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.weatherapp.R
+import com.itzik.weatherapp.R
 import com.itzik.weatherapp.project.models.weather.WeatherResponse
 import com.itzik.weatherapp.project.utils.convertFromFahrenheitToCelsius
 import com.itzik.weatherapp.project.utils.getFullCountryName

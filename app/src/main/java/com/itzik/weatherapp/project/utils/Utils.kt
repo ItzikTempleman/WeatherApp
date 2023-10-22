@@ -1,6 +1,6 @@
 package com.itzik.weatherapp.project.utils
 
-import com.example.weatherapp.project.view.toggleProgressBar
+import com.itzik.weatherapp.project.view.composables.toggleProgressBar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.Locale

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.project.view.toggleProgressBar
+import com.itzik.weatherapp.project.view.composables.toggleProgressBar
 import com.itzik.weatherapp.project.models.forecast.ForecastResponse
 import com.itzik.weatherapp.project.models.location_images.ImageResponse
 import com.itzik.weatherapp.project.models.weather.WeatherResponse

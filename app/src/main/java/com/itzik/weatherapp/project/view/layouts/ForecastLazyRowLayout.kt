@@ -24,7 +24,7 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.example.weatherapp.R
+import com.itzik.weatherapp.R
 import com.itzik.weatherapp.project.models.forecast.ForecastItem
 import com.itzik.weatherapp.project.models.forecast.ForecastResponse
 import com.itzik.weatherapp.project.utils.convertFromKelvinToCelsius

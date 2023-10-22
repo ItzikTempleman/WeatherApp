@@ -26,8 +26,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.weatherapp.R
-import com.example.weatherapp.project.view.toggleProgressBar
+import com.itzik.weatherapp.R
 import com.itzik.weatherapp.project.view.screens.search
 import com.itzik.weatherapp.project.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope

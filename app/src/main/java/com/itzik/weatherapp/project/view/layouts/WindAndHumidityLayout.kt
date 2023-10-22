@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.example.weatherapp.R
+import com.itzik.weatherapp.R
 import com.itzik.weatherapp.project.models.weather.WeatherResponse
 import com.itzik.weatherapp.project.utils.capitalizeDesc
 import com.itzik.weatherapp.project.utils.convertFromMilesToKm

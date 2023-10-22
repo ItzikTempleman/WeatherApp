@@ -1,11 +1,11 @@
-package com.example.weatherapp.project.view
+package com.itzik.weatherapp.project.view.composables
 
 import android.annotation.SuppressLint
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import com.example.weatherapp.R
+import com.itzik.weatherapp.R
 import com.itzik.weatherapp.project.view.screens.isProgressBarVisible
 
 
