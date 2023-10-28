@@ -11,11 +11,11 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.itzik_app.weatherapp"
+        applicationId "com.isak_app.weather"
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -26,9 +26,6 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
         buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
-
-
-
     }
 
     buildTypes {
@@ -37,6 +34,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
