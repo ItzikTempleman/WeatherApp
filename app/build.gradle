@@ -11,7 +11,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.itzik.weatherapp"
+        applicationId "com.itzik_app.weatherapp"
         minSdk 26
         targetSdk 34
         versionCode 1
