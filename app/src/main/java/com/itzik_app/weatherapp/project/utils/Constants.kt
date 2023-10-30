@@ -8,8 +8,10 @@ object Constants {
 
     const val API_KEY_NAME = "x-rapidapi-key"
 
+
+    //const val API_KEY_VALUE= "64ed68359bmshfaef2650856327fp17d69bjsn6c53d7804d80"
     //const val API_KEY_VALUE = "370f715c6cmsh2aedaf88c0ad5bcp1aafa4jsncf895a26cb42"
-    const val API_KEY_VALUE = "1efcdfbbe9mshb72149862079f25p13b0afjsne6cce1f4c14d"
+    //const val API_KEY_VALUE = "1efcdfbbe9mshb72149862079f25p13b0afjsne6cce1f4c14d"
 
 
     const val API_HOST_NAME = "x-rapidapi-host"
@@ -21,7 +23,7 @@ object Constants {
 
 
     const val WEATHER_RESPONSE_TABLE = "weatherResponseTable"
-    const val WEATHER_RESPONSE_DATABASE = "conversationDatabase"
+
 
 
     const val GOOGLE_MAPS_API_KEY = "AIzaSyCkfBarU6MCQRgncXXbXnT8j5Hix0ODsnA"
